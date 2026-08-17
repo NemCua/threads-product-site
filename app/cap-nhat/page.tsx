@@ -3,7 +3,17 @@ import { Footer, Header } from "../site-components";
 
 const releases = [
   {
-    version: "1.1.3", date: "17.08.2026", latest: true,
+    version: "1.1.4", date: "17.08.2026", latest: true,
+    title: "Bản phát hành desktop mới cho macOS và Windows",
+    summary: "Cập nhật bộ cài mới nhất cho cả hai nền tảng, tiếp tục hỗ trợ Mac Apple Silicon, Mac Intel và Windows 64-bit.",
+    groups: [
+      { name: "macOS", items: ["Phát hành bản DMG và ZIP cho Mac Apple Silicon ARM64.", "Phát hành bản DMG và ZIP riêng cho Mac Intel x64."] },
+      { name: "Windows", items: ["Cập nhật bộ cài Setup dành cho Windows 10/11 64-bit.", "Cập nhật phiên bản Portable có thể chạy không cần cài đặt."] },
+      { name: "Phát hành", items: ["Toàn bộ file phiên bản 1.1.4 được phân phối trực tiếp qua GitHub Releases.", "Giữ riêng source website và bộ cài desktop để tải trang nhanh, ổn định hơn."] },
+    ]
+  },
+  {
+    version: "1.1.3", date: "17.08.2026", latest: false,
     title: "Thư viện media trực quan và âm báo Messenger tự động",
     summary: "Đồng bộ bản local với ứng dụng đóng gói, bổ sung toàn bộ tài nguyên mới và hoàn thiện cách chọn media, thời lượng card cùng phản hồi khi xuất video.",
     groups: [
@@ -43,7 +53,7 @@ const releases = [
 
 export default function UpdatesPage(){
   return <main><Header active="updates"/>
-    <section className="updates-hero"><div className="shell updates-hero-inner"><div><div className="eyebrow"><span/> Nhật ký phát triển</div><h1>Mỗi phiên bản<br/>đều <em>tốt hơn.</em></h1></div><div><p>Theo dõi tính năng mới, những cải thiện quan trọng và các lỗi đã được khắc phục trong Threads Video Maker.</p><div className="latest-pill"><i/> Phiên bản mới nhất: <b>1.1.3</b></div></div></div></section>
+    <section className="updates-hero"><div className="shell updates-hero-inner"><div><div className="eyebrow"><span/> Nhật ký phát triển</div><h1>Mỗi phiên bản<br/>đều <em>tốt hơn.</em></h1></div><div><p>Theo dõi tính năng mới, những cải thiện quan trọng và các lỗi đã được khắc phục trong Threads Video Maker.</p><div className="latest-pill"><i/> Phiên bản mới nhất: <b>1.1.4</b></div></div></div></section>
     <section className="shell releases">
       <aside className="release-index"><span className="kicker">Các phiên bản</span>{releases.map(r=><a key={r.version} href={`#v-${r.version.replaceAll(".","-")}`}><b>v{r.version}</b><small>{r.latest?"Mới nhất":r.date}</small></a>)}</aside>
       <div className="release-list">{releases.map((release,index)=><article className={`release ${release.latest?"current":""}`} id={`v-${release.version.replaceAll(".","-")}`} key={release.version}>
