@@ -3,7 +3,17 @@ import { Footer, Header } from "../site-components";
 
 const releases = [
   {
-    version: "1.1.4", date: "17.08.2026", latest: true,
+    version: "1.1.5", date: "18.08.2026", latest: true,
+    title: "Tạo kịch bản bằng AI và cải thiện trải nghiệm biên tập",
+    summary: "Bổ sung quy trình tạo nội dung bằng AI, tối ưu bố cục kịch bản và đóng gói sẵn FFmpeg cho cả macOS lẫn Windows.",
+    groups: [
+      { name: "AI & kịch bản", items: ["Tạo kịch bản post, comment, reply và Messenger bằng AI.", "Tách nội dung hiển thị và nội dung đọc, hỗ trợ bài nhiều đoạn cùng lựa chọn giọng.", "Bảng giá AI thay đổi theo độ dài và số từ của prompt, được quản lý từ trang admin."] },
+      { name: "Trải nghiệm biên tập", items: ["Cải thiện card song song, khả năng focus card từ preview và bố cục khu vực kịch bản.", "Đóng gói sẵn FFmpeg cho cả macOS và Windows, người dùng không cần tự cài đặt."] },
+      { name: "Nền tảng", items: ["Phát hành cho Mac Apple Silicon ARM64, Mac Intel x64 và Windows x64.", "Bộ cài chưa được ký chứng thư Apple/Microsoft nên hệ điều hành có thể cảnh báo khi mở lần đầu."] },
+    ]
+  },
+  {
+    version: "1.1.4", date: "17.08.2026", latest: false,
     title: "Bản phát hành desktop mới cho macOS và Windows",
     summary: "Cập nhật bộ cài mới nhất cho cả hai nền tảng, tiếp tục hỗ trợ Mac Apple Silicon, Mac Intel và Windows 64-bit.",
     groups: [
@@ -53,7 +63,7 @@ const releases = [
 
 export default function UpdatesPage(){
   return <main><Header active="updates"/>
-    <section className="updates-hero"><div className="shell updates-hero-inner"><div><div className="eyebrow"><span/> Nhật ký phát triển</div><h1>Mỗi phiên bản<br/>đều <em>tốt hơn.</em></h1></div><div><p>Theo dõi tính năng mới, những cải thiện quan trọng và các lỗi đã được khắc phục trong Threads Video Maker.</p><div className="latest-pill"><i/> Phiên bản mới nhất: <b>1.1.4</b></div></div></div></section>
+    <section className="updates-hero"><div className="shell updates-hero-inner"><div><div className="eyebrow"><span/> Nhật ký phát triển</div><h1>Mỗi phiên bản<br/>đều <em>tốt hơn.</em></h1></div><div><p>Theo dõi tính năng mới, những cải thiện quan trọng và các lỗi đã được khắc phục trong Threads Video Maker.</p><div className="latest-pill"><i/> Phiên bản mới nhất: <b>1.1.5</b></div></div></div></section>
     <section className="shell releases">
       <aside className="release-index"><span className="kicker">Các phiên bản</span>{releases.map(r=><a key={r.version} href={`#v-${r.version.replaceAll(".","-")}`}><b>v{r.version}</b><small>{r.latest?"Mới nhất":r.date}</small></a>)}</aside>
       <div className="release-list">{releases.map((release,index)=><article className={`release ${release.latest?"current":""}`} id={`v-${release.version.replaceAll(".","-")}`} key={release.version}>
