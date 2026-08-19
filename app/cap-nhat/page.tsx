@@ -3,7 +3,17 @@ import { Footer, Header } from "../site-components";
 
 const releases = [
   {
-    version: "1.1.6", date: "18.08.2026", latest: true,
+    version: "1.1.7", date: "19.08.2026", latest: true,
+    title: "Bản vá hiển thị video dành riêng cho Windows",
+    summary: "Khắc phục các vấn đề về tỷ lệ, độ nét và thanh cuộn trong video xuất trên Windows; macOS tiếp tục sử dụng phiên bản 1.1.6.",
+    groups: [
+      { name: "Xuất video", items: ["Sửa tình trạng video xuất bị bẹp do DPI và viewport của renderer ẩn.", "Cải thiện độ nét của video thành phẩm trên Windows.", "Loại bỏ scrollbar xuất hiện ngoài ý muốn trong video xuất."] },
+      { name: "Windows", items: ["Phát hành bộ cài Setup mới cho Windows x64.", "Phát hành bản Portable mới cho Windows x64."] },
+      { name: "Phạm vi", items: ["Đây là bản vá riêng cho Windows.", "macOS không được build lại và vẫn sử dụng phiên bản 1.1.6."] },
+    ]
+  },
+  {
+    version: "1.1.6", date: "18.08.2026", latest: false,
     title: "Bản vá ổn định cho macOS và Windows",
     summary: "Cập nhật bộ cài mới nhất cho cả hai nền tảng với các bản vá sau phiên bản 1.1.5.",
     groups: [
@@ -73,14 +83,14 @@ const releases = [
 
 export default function UpdatesPage(){
   return <main><Header active="updates"/>
-    <section className="updates-hero"><div className="shell updates-hero-inner"><div><div className="eyebrow"><span/> Nhật ký phát triển</div><h1>Mỗi phiên bản<br/>đều <em>tốt hơn.</em></h1></div><div><p>Theo dõi tính năng mới, những cải thiện quan trọng và các lỗi đã được khắc phục trong Threads Video Maker.</p><div className="latest-pill"><i/> Phiên bản mới nhất: <b>1.1.6</b></div></div></div></section>
+    <section className="updates-hero"><div className="shell updates-hero-inner"><div><div className="eyebrow"><span/> Nhật ký phát triển</div><h1>Mỗi phiên bản<br/>đều <em>tốt hơn.</em></h1></div><div><p>Theo dõi tính năng mới, những cải thiện quan trọng và các lỗi đã được khắc phục trong Threads Video Maker.</p><div className="latest-pill"><i/> Phiên bản mới nhất: <b>1.1.7 · Windows</b></div></div></div></section>
     <section className="shell releases">
       <aside className="release-index"><span className="kicker">Các phiên bản</span>{releases.map(r=><a key={r.version} href={`#v-${r.version.replaceAll(".","-")}`}><b>v{r.version}</b><small>{r.latest?"Mới nhất":r.date}</small></a>)}</aside>
       <div className="release-list">{releases.map((release,index)=><article className={`release ${release.latest?"current":""}`} id={`v-${release.version.replaceAll(".","-")}`} key={release.version}>
         <header className="release-head"><div className="release-version"><span>VERSION</span><strong>{release.version}</strong></div><div className="release-meta"><time>{release.date}</time>{release.latest?<span className="current-badge">Bản hiện tại</span>:<span className="archive-badge">Bản lưu trữ</span>}</div></header>
         <h2>{release.title}</h2><p className="release-summary">{release.summary}</p>
         <div className="change-groups">{release.groups.map(group=><section key={group.name}><h3>{group.name}</h3><ul>{group.items.map(item=><li key={item}><span>✓</span>{item}</li>)}</ul></section>)}</div>
-        <div className="release-action">{release.latest?<><Link className="button primary" href="/macos">Tải phiên bản mới nhất <span>→</span></Link><small>Chỉ cung cấp bản tải mới nhất để bảo đảm an toàn và ổn định.</small></>:<><span className="old-version-lock">⌁ Phiên bản cũ — không còn cung cấp tải xuống</span><small>Nội dung được giữ lại nhằm tham khảo lịch sử phát triển.</small></>}</div>
+        <div className="release-action">{release.latest?<><Link className="button primary" href="/windows">Tải bản vá Windows mới nhất <span>→</span></Link><small>macOS tiếp tục sử dụng phiên bản 1.1.6.</small></>:<><span className="old-version-lock">⌁ Phiên bản cũ — không còn cung cấp tải xuống</span><small>Nội dung được giữ lại nhằm tham khảo lịch sử phát triển.</small></>}</div>
         {index<releases.length-1&&<div className="release-connector"/>}
       </article>)}</div>
     </section>
