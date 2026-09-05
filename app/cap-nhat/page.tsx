@@ -3,7 +3,17 @@ import { Footer, Header } from "../site-components";
 
 const releases = [
   {
-    version: "1.1.8", date: "20.08.2026", latest: true,
+    version: "1.1.9", date: "05.09.2026", latest: true,
+    title: "Hoàn thiện chủ đề và trải nghiệm Messenger",
+    summary: "Bổ sung chủ đề Olivia Rodrigo, giao diện header/footer mới và quy trình chọn icon nhanh cho Messenger.",
+    groups: [
+      { name: "Messenger", items: ["Bổ sung chủ đề Olivia Rodrigo cùng nền hội thoại, màu icon và footer đồng bộ.", "Tinh chỉnh header và footer với hiệu ứng glass cùng bo góc mới."] },
+      { name: "Icon & dữ liệu", items: ["Chọn icon nhanh từ danh sách emoji hoặc tự nhập emoji cho ô soạn tin nhắn.", "Xuất và nạp JSON Messenger giữ lại tin nhắn, mốc giờ, cuộc gọi và thiết lập hội thoại."] },
+      { name: "Phát hành", items: ["Phát hành bộ cài macOS Apple Silicon, macOS Intel và Windows x64."] },
+    ]
+  },
+  {
+    version: "1.1.8", date: "20.08.2026", latest: false,
     title: "Bản vá mới cho macOS và Windows",
     summary: "Cập nhật phiên bản 1.1.8 mới cho cả macOS lẫn Windows, thay thế bản phát hành chỉ dành cho Windows trước đó.",
     groups: [
@@ -93,7 +103,7 @@ const releases = [
 
 export default function UpdatesPage(){
   return <main><Header active="updates"/>
-    <section className="updates-hero"><div className="shell updates-hero-inner"><div><div className="eyebrow"><span/> Nhật ký phát triển</div><h1>Mỗi phiên bản<br/>đều <em>tốt hơn.</em></h1></div><div><p>Theo dõi tính năng mới, những cải thiện quan trọng và các lỗi đã được khắc phục trong Threads Video Maker.</p><div className="latest-pill"><i/> Phiên bản mới nhất: <b>1.1.8</b></div></div></div></section>
+    <section className="updates-hero"><div className="shell updates-hero-inner"><div><div className="eyebrow"><span/> Nhật ký phát triển</div><h1>Mỗi phiên bản<br/>đều <em>tốt hơn.</em></h1></div><div><p>Theo dõi tính năng mới, những cải thiện quan trọng và các lỗi đã được khắc phục trong Threads Video Maker.</p><div className="latest-pill"><i/> Phiên bản mới nhất: <b>1.1.9</b></div></div></div></section>
     <section className="shell releases">
       <aside className="release-index"><span className="kicker">Các phiên bản</span>{releases.map(r=><a key={r.version} href={`#v-${r.version.replaceAll(".","-")}`}><b>v{r.version}</b><small>{r.latest?"Mới nhất":r.date}</small></a>)}</aside>
       <div className="release-list">{releases.map((release,index)=><article className={`release ${release.latest?"current":""}`} id={`v-${release.version.replaceAll(".","-")}`} key={release.version}>
