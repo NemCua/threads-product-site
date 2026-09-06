@@ -3,7 +3,17 @@ import { Footer, Header } from "../site-components";
 
 const releases = [
   {
-    version: "1.1.9", date: "05.09.2026", latest: true,
+    version: "1.1.13", date: "06.09.2026", latest: true,
+    title: "Phát hành desktop không phụ thuộc cài đặt thủ công",
+    summary: "Hoàn thiện quy trình phát hành macOS và Windows, với FFmpeg cùng tài nguyên cần thiết được đóng gói trực tiếp trong ứng dụng.",
+    groups: [
+      { name: "Đóng gói", items: ["Tích hợp FFmpeg và tài nguyên giao diện cần thiết vào bộ cài desktop.", "Người dùng không cần cài Python hoặc FFmpeg riêng để bắt đầu sử dụng ứng dụng."] },
+      { name: "Xuất video", items: ["Củng cố pipeline xuất MP4 trong ứng dụng desktop.", "Giữ TTS và hệ thống credit kết nối qua backend VPS."] },
+      { name: "Phát hành", items: ["Có sẵn bộ cài cho Mac Apple Silicon, Mac Intel và Windows x64."] },
+    ]
+  },
+  {
+    version: "1.1.9", date: "05.09.2026", latest: false,
     title: "Hoàn thiện chủ đề và trải nghiệm Messenger",
     summary: "Bổ sung chủ đề Olivia Rodrigo, giao diện header/footer mới và quy trình chọn icon nhanh cho Messenger.",
     groups: [
@@ -103,7 +113,7 @@ const releases = [
 
 export default function UpdatesPage(){
   return <main><Header active="updates"/>
-    <section className="updates-hero"><div className="shell updates-hero-inner"><div><div className="eyebrow"><span/> Nhật ký phát triển</div><h1>Mỗi phiên bản<br/>đều <em>tốt hơn.</em></h1></div><div><p>Theo dõi tính năng mới, những cải thiện quan trọng và các lỗi đã được khắc phục trong Threads Video Maker.</p><div className="latest-pill"><i/> Phiên bản mới nhất: <b>1.1.9</b></div></div></div></section>
+    <section className="updates-hero"><div className="shell updates-hero-inner"><div><div className="eyebrow"><span/> Nhật ký phát triển</div><h1>Mỗi phiên bản<br/>đều <em>tốt hơn.</em></h1></div><div><p>Theo dõi tính năng mới, những cải thiện quan trọng và các lỗi đã được khắc phục trong Threads Video Maker.</p><div className="latest-pill"><i/> Phiên bản mới nhất: <b>1.1.13</b></div></div></div></section>
     <section className="shell releases">
       <aside className="release-index"><span className="kicker">Các phiên bản</span>{releases.map(r=><a key={r.version} href={`#v-${r.version.replaceAll(".","-")}`}><b>v{r.version}</b><small>{r.latest?"Mới nhất":r.date}</small></a>)}</aside>
       <div className="release-list">{releases.map((release,index)=><article className={`release ${release.latest?"current":""}`} id={`v-${release.version.replaceAll(".","-")}`} key={release.version}>
