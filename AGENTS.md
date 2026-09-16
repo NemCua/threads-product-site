@@ -39,6 +39,37 @@ Until the Fake Messenger code is extracted into shared modules, changes to its
 behavior must be copied deliberately to both files above. Do not assume they
 sync automatically.
 
+## Threads Video Maker App And Admin
+
+`/Users/nguyenquochuy/test-audio/threads` is a separate repository/workspace:
+it contains the actual Threads Video Maker application, its renderer, local
+admin dashboard, and account/credit/TTS API. It is not the same project as the
+public ToolVideos product/download website in this repository.
+
+Read `/Users/nguyenquochuy/test-audio/threads/CONTEXT.md` first before changing
+that application. Check its current Git branch and dirty worktree; do not
+assume it is on `main` or overwrite unrelated work.
+
+| Need | Edit or read in `/Users/nguyenquochuy/test-audio/threads` |
+| --- | --- |
+| Browser-first Threads Video Maker UI | `index.html` |
+| Exact Threads card visual reference | `threads_ui_mock.html` |
+| Shared timeline/rendering engine | `render_shared.js` |
+| Browser capture/export target | `export_render.html` |
+| Local admin dashboard and service | `admin.html`, `admin_server.py` |
+| Auth, credits, TTS, and production API | `unified_server.py` |
+| API, authentication, and server setup | `SERVER_SETUP.md` |
+| Static/browser hosting notes | `STATIC_HOSTING.md` |
+
+`admin_server.py` is a local-only admin service. Do not publish its dashboard
+by copying it into the static ToolVideos deployment. Production account,
+credit, and TTS behavior belongs to `unified_server.py`; follow the Threads
+project deployment documentation, including `../deploy/VPS.md`, for that API.
+
+Keep API keys, admin keys, database URLs, SSH credentials, and other secrets
+out of every repository and this guide. The ToolVideos `rsync` deployment only
+publishes the static website; it does not deploy the Threads API or admin.
+
 ## Fake Messenger Notes
 
 - The app supports Messenger and Instagram through the `app-style` selector.
