@@ -1,0 +1,40 @@
+(toolvideos-static) {
+    encode zstd gzip
+
+    root * /srv/toolvideos
+    try_files {path} {path}.html {path}/ {path}/index.html
+    file_server
+
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "no-referrer"
+        -Server
+    }
+}
+
+toolvideos.103-121-90-232.sslip.io {
+    import toolvideos-static
+}
+
+www.{$TOOLVIDEOS_DOMAIN} {
+    redir https://{$TOOLVIDEOS_DOMAIN}{uri} permanent
+}
+
+{$TOOLVIDEOS_DOMAIN} {
+    @homepage path /
+    redir @homepage /home permanent
+    import toolvideos-static
+}
+
+{$DOMAIN} {
+    encode zstd gzip
+    reverse_proxy api:8007
+
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "no-referrer"
+        -Server
+    }
+}

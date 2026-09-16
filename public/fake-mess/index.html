@@ -1,0 +1,1625 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Messenger — Tên người dùng</title>
+<style>
+  *{box-sizing:border-box}
+  :root{--blue:#2864ed;--ink:#050505;--muted:#65676b;--bubble:#f0f0f0;--chat-bg:#fff;--outgoing-start:#3270f5;--outgoing-end:#2860eb;--theme-overlay:rgba(174,178,239,.58);--composer-theme:rgba(174,178,239,.55);--hair:#f0f0f0}
+  html,body{height:100%;margin:0}
+  body{display:grid;place-items:center;background:#18191a;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,"Apple Color Emoji","Segoe UI Emoji",sans-serif;font-weight:440;-webkit-font-smoothing:antialiased}
+  button{font:inherit}
+  .phone{position:relative;width:min(100vw,414px);height:min(100vh,896px);aspect-ratio:414/896;overflow:hidden;background:var(--chat-bg);color:var(--ink)}
+  .preview-watermark{position:absolute;z-index:10;inset:0;display:grid;place-items:center;pointer-events:none;color:#151515;font-size:34px;font-weight:800;letter-spacing:0;line-height:1;opacity:.22;transform:rotate(-18deg);text-align:center}.preview-watermark[hidden]{display:none}
+  .phone:before{content:"";position:absolute;z-index:3;left:0;right:0;top:0;height:92px;background:rgba(255,255,255,.58);-webkit-backdrop-filter:saturate(180%) blur(27.18px);backdrop-filter:saturate(180%) blur(27.18px)}
+  .phone:after{content:"";position:absolute;z-index:0;inset:0;pointer-events:none;background:transparent}.phone.themed-background:after{background:var(--theme-overlay)}.phone.themed-background:before{background:rgba(187,199,239,.52)}
+  @media (max-aspect-ratio:414/896){.phone{height:auto}}
+
+  .status{position:absolute;z-index:5;inset:0 0 auto;height:47px;background:transparent}
+  .clock{position:absolute;left:30px;top:16px;font-size:16px;line-height:19px;font-weight:693;letter-spacing:-.38px}
+  .island{position:absolute;left:176px;top:-23px;width:60px;height:60px;border:9px solid #c8c8c8;border-radius:50%;background:#ddd;box-shadow:inset 0 0 0 2px #d3d3d3,0 0 0 1px #bdbdbd}
+  .signals{position:absolute;right:17px;top:17px;height:15px;display:flex;align-items:center;gap:5.6px}
+  .cell-icon{display:block;width:17px;height:10.67px;fill:#060606}.wifi-icon{display:block;width:15.28px;height:11.98px;fill:#060606}
+  .battery{position:relative;width:25px;height:14px;overflow:visible;border-radius:4px;background:linear-gradient(to right,var(--battery-color,#f7ce45) 0%,var(--battery-color,#f7ce45) calc(var(--level)*1%),#bdc4d1 calc(var(--level)*1%),#bdc4d1 100%);color:#111;text-align:center;font-size:13px;line-height:14px;font-weight:700}.battery:before{content:"";position:absolute;z-index:-1;inset:0;border-radius:4px;background:#bdc4d1}.battery:after{content:"";position:absolute;right:-3px;top:4px;width:2px;height:6px;border-radius:0 2px 2px 0;background:#bdc4d1}.battery-level{position:relative;z-index:1;display:block;width:100%;height:100%;line-height:14px;text-align:center;}.battery[data-state="normal"],.battery[data-state="low"]{color:#fff}.battery-charge-icon{position:absolute;z-index:2;right:2px;top:1.25px;display:none;width:6px;height:11.5px;fill:currentColor}.battery.is-charging .battery-charge-icon{display:block}.battery.is-charging .battery-level{padding-right:5px;font-size:11px}
+
+  .topbar{position:absolute;z-index:4;left:0;right:0;top:47px;display:flex;align-items:center;background:transparent}
+  .back{position:relative;width:11.65px;height:19.14px;display:block;flex:0 0 11.65px;margin-left:10px;fill:#3274f5}
+  .unread{position:relative;width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex:0 0 18px;margin-left:3px;padding:0;border-radius:50%;background:#3274f5;color:#fff;font-size:12px;line-height:18px;font-weight:687;text-align:center}
+  .avatar{overflow:hidden;border-radius:50%;background:linear-gradient(145deg,#394652 0 44%,#d2bea5 45% 69%,#3d342d 70%)}
+  .avatar:after{content:"";display:block;width:38%;height:55%;margin:34% auto 0;border-radius:45% 45% 20% 20%;background:#111b25;transform:rotate(11deg)}
+  .head-avatar{position:relative;width:36px;height:36px;flex:0 0 36px;margin-left:6.35px}
+  .identity{position:relative;min-width:0;margin-left:11px}.name{font-size:16.7px;line-height:21px;font-weight:740;letter-spacing:-.5px}.presence{margin-top:0;color:#67696d;font-size:12.2px;line-height:15px;font-weight:490;letter-spacing:-.17px;white-space:nowrap}
+  .head-actions{position:relative;display:flex;align-items:center;flex:none;gap:22.8px;margin-left:auto;margin-right:15.35px;color:#3274f5}.head-actions svg{display:block;width:19.97px;height:19.97px;fill:currentColor}.head-actions svg:last-child{width:23.3px;height:19.97px}
+  .pinned-banner{position:absolute;z-index:4;left:0;right:0;top:92px;height:54px;display:flex;align-items:center;gap:10px;padding:7px 14px 7px 10px;background:rgba(255,255,255,.76);-webkit-backdrop-filter:saturate(160%) blur(26px);backdrop-filter:saturate(160%) blur(26px);box-shadow:inset 0 1px rgba(255,255,255,.4)}.pinned-banner[hidden]{display:none}.pinned-icon{width:31px;height:31px;flex:0 0 31px;display:grid;place-items:center;border-radius:50%;background:#a7adb7}.pinned-icon img{display:block;width:17px;height:17px;object-fit:contain}.pinned-copy{min-width:0;flex:1}.pinned-title,.pinned-detail{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pinned-title{font-size:15px;line-height:18px;font-weight:700;letter-spacing:-.25px}.pinned-detail{margin-top:1px;color:#6c6e73;font-size:13px;line-height:16px;letter-spacing:-.18px}.pinned-chevron{width:17px;height:17px;flex:0 0 17px;color:#61646a;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:2}
+
+  .chat{position:absolute;z-index:1;left:0;right:0;top:0;bottom:79px;overflow:hidden;background:transparent}.chat>:not(.generated):not(.seen){transform:translateY(92px)}
+  .row{position:absolute;display:flex;align-items:flex-end}.row.mine{right:8px;justify-content:flex-end}.row.theirs{left:16px;gap:12px}.mini{width:28px;height:28px;flex:none}
+  .bubble{font-size:16px;line-height:19px;letter-spacing:-.41px;padding:9px 13px 9px;border-radius:18px;background:var(--bubble);white-space:nowrap}
+  .mine .bubble{color:#fff;background:linear-gradient(180deg,var(--outgoing-start),var(--outgoing-end))}
+  .themed-background .bubble{background:rgba(246,246,255,.88)}.themed-background .mine .bubble{background:linear-gradient(180deg,#2c5bc9,#224ab5)}
+  .group .bubble{border-radius:18px 4px 4px 18px}.group.first .bubble{border-top-right-radius:18px}.group.last .bubble{border-bottom-right-radius:18px}
+  .m1{top:0}.m1 .bubble{font-size:16px;padding:8px 13px 9px}.react{position:absolute;right:10px;top:31px;width:28px;height:22px;display:flex;align-items:center;justify-content:center;padding:0;border:2px solid transparent;border-radius:13px;background:#f2f3f5;text-align:center;font-size:13px;line-height:1}
+  .m2{top:67px}.m2 .bubble{padding:9px 13px}.m3{top:117px}.m4{top:186px}.m5{top:224.92px}.m6{top:263.84px}.m7{top:302.76px}.m8{top:341.68px}
+  .m3 .bubble,.m4 .bubble,.m5 .bubble,.m6 .bubble,.m7 .bubble{font-size:16px;padding:9px 13px}
+  .react2{position:absolute;right:10px;top:148px;width:28px;height:22px;display:flex;align-items:center;justify-content:center;padding:0;border:2px solid transparent;border-radius:13px;background:#f2f3f5;text-align:center;font-size:13px;line-height:1}
+  .timestamp{position:absolute;top:404px;left:0;right:0;text-align:center;color:#6b6d72;font-size:13px;line-height:16px;letter-spacing:-.17px}
+  .reply-label{position:absolute;top:434px;left:70px;display:flex;align-items:center;gap:4px;width:max-content;max-width:none;color:#6b6d72;font-size:12px;line-height:15px;white-space:nowrap}.reply-label svg{width:12px;height:12px;display:block;flex:none;fill:currentColor}
+  .reply-preview{position:absolute;left:56px;top:454px;width:219px;height:69px;padding:9px 12px;border-radius:18px;background:#fafafa;color:#696b70;font-size:14px;line-height:17px;letter-spacing:-.21px}
+  .incoming{left:56px}.i1{top:506px}.i2{top:544.92px}.i3{top:583.84px}.i4{top:622.76px}.incoming .bubble{padding:9px 12px;border-radius:4px 18px 18px 4px}.incoming.i1 .bubble{border-top-left-radius:18px}.incoming.i4 .bubble{padding-right:15px;border-bottom-left-radius:18px}
+  .reply-avatar{position:absolute;left:16px;top:636px;width:28px;height:28px}
+
+  .composer{position:absolute;z-index:3;left:0;right:0;bottom:22px;height:57px;display:flex;align-items:center;padding:8px 14px 8px 14px;gap:15px;background:rgba(255,255,255,.72);-webkit-backdrop-filter:saturate(180%) blur(24px);backdrop-filter:saturate(180%) blur(24px);color:#071fc7}.composer:after{content:"";position:absolute;z-index:-1;left:0;right:0;top:100%;height:22px;background:inherit;-webkit-backdrop-filter:inherit;backdrop-filter:inherit}.themed-background .composer{background:var(--composer-theme)}.themed-background .composer-input{background:rgba(255,255,255,.88)}
+  .tool{position:relative;width:27px;height:27px;flex:none;display:grid;place-items:center;color:#1029c8;border:0;background:none;padding:0}.tool svg{width:21.6px;height:21.6px;display:block;fill:currentColor;overflow:visible}.tool[aria-label="Ảnh"] svg{height:19px}.tool[aria-label="Micrô"]{width:20px}.tool[aria-label="Micrô"] svg{width:23px;height:23px;transform:scaleX(1.04);transform-origin:center}
+  .plus{position:relative;color:#1029c8}.plus svg{width:21.6px;height:21.6px;display:block;overflow:visible}
+  .composer-input{height:40px;min-width:0;flex:1;margin-left:1px;border-radius:22px;background:rgba(0,0,0,.05);display:flex;align-items:center;padding-left:16px;color:#707277;font-size:16px;letter-spacing:-.65px}.composer-input span{flex:1}.smile{width:20.92px;height:20.92px;margin-right:6.05px;display:block;fill:#1029c8}.like{width:20px;height:21.6px;margin-left:2.5px;margin-right:2.5px;display:block;fill:#1029c8;object-fit:contain;transform:translateY(-1px)}.like-emoji{display:flex;align-items:center;justify-content:center;font-size:21px;line-height:1;white-space:nowrap}
+  .ig-header-actions,.ig-sticker{display:none}.instagram-style:before{height:105px;background:rgba(255,255,255,.97);-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom:0}.instagram-style .back{width:14px;height:23px;flex-basis:14px;margin-left:28px;fill:#050505}.instagram-style .unread,.instagram-style .head-actions{display:none}.instagram-style .head-avatar{width:36px;height:36px;flex-basis:36px;margin-left:20px;box-shadow:0 0 0 2px #dfe3e8}.instagram-style .identity{margin-left:12px;padding-right:18px}.instagram-style .identity:after{content:'›';position:absolute;right:2px;top:-1px;color:#747b85;font-size:25px;font-weight:350;line-height:22px}.instagram-style .name{color:#737b85;font-size:16.5px;font-weight:720;letter-spacing:-.5px}.instagram-style .presence{color:#737b85;font-size:12.5px;line-height:16px}.instagram-style .ig-header-actions{position:absolute;right:15px;top:5px;display:flex;align-items:center;gap:21px;color:#050505}.instagram-style .ig-header-actions svg{display:block;width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}.instagram-style .ig-header-actions svg:first-child{width:27px;height:27px}.instagram-style .composer{left:8px;right:8px;bottom:28px;height:44px;padding:4px 10px;gap:12px;border-radius:24px;background:#f4f4f5;color:#050505}.instagram-style .composer:after{display:none}.instagram-style .composer .tool{width:25px;height:25px;color:#050505}.instagram-style .composer .tool svg{width:24px;height:24px}.instagram-style .composer .tool[aria-label="Camera"]{order:1;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#6b4dff,#8c4fff);color:#fff}.instagram-style .composer .tool[aria-label="Camera"] svg{width:23px;height:23px}.instagram-style .composer-input{order:2;height:34px;margin:0;padding:0;border-radius:0;background:transparent;color:#747b85;font-size:16px;letter-spacing:-.35px}.instagram-style .composer-input .smile{display:none}.instagram-style .composer .tool[aria-label="Micrô"]{order:3;width:25px}.instagram-style .composer .tool[aria-label="Micrô"] svg{width:25px;height:25px;transform:none}.instagram-style .composer .tool[aria-label="Ảnh"]{order:4}.instagram-style .composer .plus{order:6;width:25px;height:25px}.instagram-style .composer .plus svg{display:none}.instagram-style .composer .plus:after{content:'+';display:grid;place-items:center;width:21px;height:21px;border:2px solid currentColor;border-radius:50%;font:400 23px/16px Arial}.instagram-style .composer .like{display:none}.instagram-style .ig-sticker{order:5;width:25px;height:25px;padding:0;border:0;background:transparent;color:#050505}.instagram-style .ig-sticker svg{display:block;width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:2.25;stroke-linecap:round;stroke-linejoin:round}
+  .instagram-style>.ig-header-actions{z-index:4}.ig-tool{display:none}.instagram-style .composer .tool[aria-label="Micrô"],.instagram-style .composer .tool[aria-label="Ảnh"]{display:none}.instagram-style .ig-tool{display:grid;place-items:center;order:3;width:25px;height:25px;padding:0;border:0;background:transparent;color:#050505}.instagram-style .ig-tool svg{display:block;width:25px;height:25px;fill:currentColor;stroke:none}.instagram-style .ig-mic line{stroke:currentColor;stroke-width:2}.instagram-style .ig-mic line:last-of-type{transform-box:fill-box;transform-origin:center;transform:scaleX(1.18)}.instagram-style .composer .tool[aria-label="Camera"] svg{transform:scale(.8)}.instagram-style .ig-photo{order:4}.instagram-style .ig-sticker{display:grid;place-items:center;order:5}.instagram-style .ig-sticker svg{fill:currentColor;stroke:none;stroke-width:initial}.instagram-style .ig-sticker svg circle{stroke:none}
+  .instagram-style .generated .message-reaction,.instagram-style .generated .theirs .message-reaction{left:10px;right:auto}.instagram-style .generated .json-reply-label{margin:0 0 6px 56px;color:#050505;font-size:12px;line-height:16px;transform:none}.instagram-style .generated .json-reply.mine .json-reply-label{margin:0 12px 6px auto;color:#050505}.instagram-style .generated .json-reply-arrow{display:none}.instagram-style .generated .quoted{position:relative;margin:0 0 6px 56px;padding:9px 12px;border-radius:18px;background:#f1f2f4;color:#6f747b}.instagram-style .generated .quoted:before{content:'';position:absolute;left:-16px;top:0;bottom:0;width:4px;border-radius:999px;background:rgba(56,62,57,.35)}.instagram-style .generated .json-reply.mine .quoted{margin:0 12px 6px auto;background:#b2b6ab;color:#fff}.instagram-style .generated .json-reply.mine .quoted:before{left:auto;right:-16px;background:rgba(56,62,57,.35)}.instagram-style .generated .json-reply .row{margin-top:8px}
+  .ig-back-icon{display:none}.instagram-style .back{display:none}.instagram-style .ig-back-icon{position:absolute;z-index:4;display:flex;left:20px;top:47px;width:35px;height:36px;align-items:center;justify-content:center;border:0;transform:none}.instagram-style .ig-back-icon:before{content:'';display:block;width:16px;height:16px;border-left:2.4px solid #050505;border-bottom:2.4px solid #050505;transform:rotate(45deg)}.instagram-style .head-avatar{margin-left:60px}.instagram-style .head-avatar-wrap{margin-left:58px}.instagram-style .reply-label svg,.instagram-style .generated .json-reply-label .json-reply-arrow{display:none!important}.instagram-style .composer,.instagram-style.themed-background .composer{background:rgba(255,255,255,.62);-webkit-backdrop-filter:saturate(180%) blur(24px);backdrop-filter:saturate(180%) blur(24px);box-shadow:0 1px 0 rgba(255,255,255,.45) inset}.instagram-style .composer-input,.instagram-style.themed-background .composer-input{background:transparent}
+  .instagram-style .ig-header-actions svg:first-child{display:block}
+  .instagram-style .composer,.instagram-style.themed-background .composer{background:rgba(255,255,255,.22);box-shadow:0 1px 0 rgba(255,255,255,.26) inset}
+  .homebar{position:absolute;z-index:5;left:133px;bottom:7px;width:148px;height:5px;border-radius:3px;background:#000}
+  .back,.head-actions svg,.cell-icon,.wifi-icon,.smile,.like{overflow:visible}
+  /* Đồng bộ hai theme đang có trong preview Messenger của app. */
+  .phone.mess-theme-olivia{--chat-bg:#e6b8c5}
+  .phone.mess-theme-olivia .chat{background:#e6b8c5 url("theme/Olivia Rodrigo.jpg") top center/cover no-repeat}
+  .phone.mess-theme-olivia:before{background:#eec5ce;-webkit-backdrop-filter:none;backdrop-filter:none}
+  .phone.mess-theme-olivia .back{fill:#45552d}.phone.mess-theme-olivia .unread{background:#45552d}
+  .phone.mess-theme-olivia .head-actions{color:#45552d}
+  .phone.mess-theme-olivia .bubble,.phone.mess-theme-olivia .reply-preview,.phone.mess-theme-olivia .generated .quoted{background:rgba(255,255,255,.91)}
+  .phone.mess-theme-olivia .mine .bubble{background:#45552d}
+  .phone.mess-theme-olivia .composer{background:#9AB87A;color:#45552d}
+  .phone.mess-theme-olivia .composer:after{background:#9AB87A}
+  .phone.mess-theme-olivia .composer-input{background:rgba(111,136,75,.35);color:#45552d}
+  .phone.mess-theme-olivia .tool,.phone.mess-theme-olivia .plus,.phone.mess-theme-olivia .smile,.phone.mess-theme-olivia .like{color:#45552d;fill:#45552d}
+  .phone.mess-theme-olivia .plus svg path{stroke:#9AB87A!important;transform:translateX(1px)}
+  .phone.mess-theme-olivia .timestamp,.phone.mess-theme-olivia .reply-label,.phone.mess-theme-olivia .generated .json-reply-label,.phone.mess-theme-olivia .generated .between-text{color:#000}
+  .phone.mess-theme-olivia .generated .quoted{background:#BBCEAA}
+  .phone.instagram-style.mess-theme-olivia .composer{background:rgba(255,255,255,.62);-webkit-backdrop-filter:saturate(180%) blur(24px);backdrop-filter:saturate(180%) blur(24px)}
+  .phone.instagram-style.mess-theme-olivia .chat{bottom:0}
+  .phone.instagram-style.mess-theme-olivia .composer:after{display:none}
+  .phone.instagram-style.mess-theme-olivia .composer-input{background:transparent}
+  .phone.instagram-style.mess-theme-olivia .composer{background:rgba(255,255,255,.22);box-shadow:0 1px 0 rgba(255,255,255,.26) inset}
+  .phone.instagram-style.mess-theme-olivia .composer .tool[aria-label="Camera"]{background:#45552d;color:#fff;transform:translateX(-2px)}
+
+  /* Message builder: controls stay outside the 414x896 capture area. */
+  .builder{position:fixed;z-index:20;left:24px;top:24px;width:340px;max-height:calc(100vh - 48px);overflow-y:auto;padding:16px;border:1px solid #34363a;border-radius:16px;background:#242526;color:#f5f6f7;box-shadow:0 16px 45px #0007;font-weight:500}.builder h2{margin:0 0 4px;font-size:17px}.builder-note{margin:0 0 14px;color:#b0b3b8;font-size:12px;line-height:16px}.builder-form{margin-top:10px}.builder-form label,.json-builder label{display:block;margin-bottom:5px;font-size:12px;font-weight:650}.builder-line{display:flex;gap:7px}.builder textarea,.builder-line input{width:100%;height:56px;padding:9px 10px;border:1px solid #4d5156;border-radius:10px;outline:none;background:#18191a;color:#fff;font-family:inherit;font-size:14px;line-height:18px;font-weight:500}.builder textarea{resize:vertical}.builder textarea:focus,.builder-line input:focus{border-color:#4285f4}.builder-send{flex:0 0 70px;border:0;border-radius:10px;color:#fff;font-size:13px;font-weight:700;cursor:pointer}.builder-send.left{background:#65676b}.builder-send.right{background:#2864ed}.builder-actions{display:flex;gap:7px;margin-top:13px}.builder-actions button{flex:1;padding:8px;border:1px solid #4d5156;border-radius:9px;background:#303236;color:#e4e6eb;font-size:12px;cursor:pointer}.json-builder{margin-top:14px;padding-top:13px;border-top:1px solid #3e4042}.builder #conversation-json{height:210px;resize:vertical;font:11px/15px ui-monospace,SFMono-Regular,Menlo,monospace}.json-error{min-height:15px;margin:5px 0 0;color:#ff8a8a;font-size:11px;line-height:15px}
+  .generated{position:absolute;z-index:2;inset:0;display:flex;flex-direction:column;padding:10px 8px 14px 16px;overflow-y:auto;background:#fff;scrollbar-width:none}.generated::-webkit-scrollbar{display:none}.generated[hidden]{display:none}.chat.building>:not(.generated){display:none}.generated .row{position:relative;left:auto;right:auto;top:auto;width:100%;display:flex;align-items:flex-end;margin:0}.generated .row+.row{margin-top:12px}.generated .row.joined{margin-top:1.92px}.generated .row.mine{justify-content:flex-end;padding-left:56px}.generated .row.theirs{justify-content:flex-start;padding-right:56px;gap:12px}.generated .avatar-slot{width:28px;height:28px;display:flex;flex:0 0 28px;align-items:flex-end}.generated .avatar-slot .avatar{width:28px;height:28px}.generated .bubble{width:max-content;max-width:none;white-space:pre-wrap;overflow-wrap:break-word}.generated .mine.start .bubble{border-bottom-right-radius:4px}.generated .mine.middle .bubble{border-top-right-radius:4px;border-bottom-right-radius:4px}.generated .mine.end .bubble{border-top-right-radius:4px}.generated .theirs.start .bubble{border-bottom-left-radius:4px}.generated .theirs.middle .bubble{border-top-left-radius:4px;border-bottom-left-radius:4px}.generated .theirs.end .bubble{border-top-left-radius:4px}
+  .builder-actions.export button{border-color:#315dcc;background:#244eb7;color:#fff;font-weight:700}.builder button:disabled{cursor:wait;opacity:.55}.export-status{min-height:16px;margin:8px 0 0;color:#b0b3b8;font-size:11px;line-height:16px;text-align:center}.generated{inset:0;padding-top:102px;background:transparent}
+  .generated .between-text{flex:none;margin:15px 0 15px;text-align:center;color:#6b6d72;font-size:13px;line-height:16px;letter-spacing:-.17px;white-space:pre-wrap}.generated .message-reaction{position:absolute;z-index:3;right:var(--reaction-right,3px);bottom:var(--reaction-bottom,-12px);width:var(--reaction-width,22px);height:var(--reaction-height,17px);box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:0;border:0;border-radius:999px;background:#f0f2f5;font-size:var(--reaction-font-size,12px);line-height:1;text-align:center;text-indent:0}.generated .message-reaction .reaction-glyph{display:block;line-height:1;transform:translateX(0)}.phone.is-exporting .generated .message-reaction .reaction-glyph{transform:translateX(.5px)}.generated .theirs .message-reaction{right:var(--reaction-right,3px);left:auto}.generated .row.has-reaction,.generated .call-row.has-reaction{margin-bottom:18px}.generated .row.has-reaction+.row.joined,.generated .call-row.has-reaction+.row.joined,.generated .call-row.has-reaction+.call-row.joined{margin-top:12px}.generated .json-reply{position:relative;width:100%;margin-top:0;overflow:visible}.generated .json-reply-label{display:flex;align-items:center;gap:4px;width:max-content;max-width:none;min-width:max-content;margin:0 0 5px 40px;color:#6b6d72;font-size:12px;line-height:15px;white-space:nowrap;overflow:visible;transform:translateX(20px)}.generated .json-reply.mine .json-reply-label{justify-content:flex-end;margin:0 8px 5px auto;transform:none}.generated .json-reply-label .json-reply-arrow{display:block;width:16px;height:13px;flex:none;object-fit:contain;opacity:.68;transform:scaleX(-1)}.generated .quoted{width:fit-content;max-width:219px;margin:6px 0 0 40px;padding:9px 12px 27px;border-radius:18px;background:rgba(250,250,250,.88);color:#696b70;font-size:14px;line-height:17px;white-space:pre-wrap}.generated .json-reply.mine .quoted{margin:6px 0 0 auto}.generated .json-reply .row{margin-top:-18px}.generated .json-reply .row.theirs{padding-right:56px}.generated .json-reply .row.mine{padding-left:56px}
+  .generated .call-row{position:relative;width:100%;display:flex;margin-top:12px}.generated .call-row:first-child{margin-top:0}.generated .call-row.joined{margin-top:1.92px}.generated .call-row+.row,.generated .call-row+.json-reply{margin-top:12px}.generated .call-row+.row.joined{margin-top:1.92px}.generated .call-row.mine{justify-content:flex-end;padding-left:56px}.generated .call-row.theirs{justify-content:flex-start;gap:12px;padding-right:56px}.generated .call-avatar-slot{width:28px;height:28px;flex:0 0 28px;align-self:flex-end}.generated .call-avatar-slot .avatar{display:block;width:28px;height:28px}.generated .call-card{width:fit-content;max-width:100%;padding:12px;border-radius:18px;background:#f1f2f4;color:#050505}.generated .call-row.mine.start .call-card{border-bottom-right-radius:4px}.generated .call-row.mine.middle .call-card{border-top-right-radius:4px;border-bottom-right-radius:4px}.generated .call-row.mine.end .call-card{border-top-right-radius:4px}.generated .call-row.theirs.start .call-card{border-bottom-left-radius:4px}.generated .call-row.theirs.middle .call-card{border-top-left-radius:4px;border-bottom-left-radius:4px}.generated .call-row.theirs.end .call-card{border-top-left-radius:4px}.generated .call-card-head{display:flex;align-items:center;gap:8px}.generated .call-card-icon{width:38px;height:38px;flex:0 0 38px;display:grid;place-items:center;border-radius:50%;background:#aab2bd;color:#fff}.generated .call-row.theirs .call-card.missed .call-card-icon,.generated .call-row.theirs .call-card.canceled .call-card-icon{background:#fa3e5d}.generated .call-card-icon svg{width:22px;height:22px;fill:currentColor}.generated .call-card-copy{min-width:0}.generated .call-card-title{font-size:15px;font-weight:700;line-height:18px;letter-spacing:-.25px;white-space:nowrap}.generated .call-card-status{margin-top:1px;color:#74777d;font-size:12px;line-height:14px}.generated .call-card-action{width:100%;height:36px;margin-top:11px;border:0;border-radius:13px;background:#dedfe1;color:#050505;font:700 15px -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:-.2px}.generated .call-card-action:active{transform:scale(.98)}
+  .generated .voice-bubble{display:flex;align-items:center;width:277px;max-width:100%;height:64px;padding:9px 16px 9px 11px;border-radius:18px;white-space:normal}.generated .voice-play{--progress-ring-neutral-foreground:#050505;width:40px;height:40px;flex:0 0 40px;display:grid;place-items:center;margin-right:12px;padding:0;border:0;border-radius:50%;background:#fff;color:#050505}.generated .voice-play svg{display:block;width:24px;height:24px}.generated .mine .voice-play{--progress-ring-neutral-foreground:#fff;background:#ffffff2e;color:#fff}.generated .voice-bars{width:153px;height:46px;flex:0 0 153px;display:flex;align-items:center;justify-content:flex-start;gap:3px}.generated .voice-bars i{width:3px;min-height:6px;height:var(--bar-height);flex:0 0 3px;border-radius:999px;background:#050505}.generated .mine .voice-bars i{background:#fff}.generated .voice-duration{flex:0 0 auto;margin-left:16px;color:#050505;font:600 13px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:0}.generated .mine .voice-duration{color:#fff}
+  .generated .mine .voice-bubble{background:linear-gradient(180deg,#2250ec 0%,#1d45e8 100%)}.generated .mine .voice-play{background:#091e5c}.phone.mess-theme-olivia .generated .mine .voice-bubble{background:#45552d}.phone.mess-theme-olivia .generated .mine .voice-play{background:#1c2014}
+  .profile-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 14px}.profile-field{min-width:0}.profile-field.wide{grid-column:1/-1}.profile-field label{display:block;margin-bottom:4px;color:#d7d9dd;font-size:11px;font-weight:650}.profile-field input,.profile-field select{width:100%;height:34px;padding:7px 9px;border:1px solid #4d5156;border-radius:9px;outline:none;background:#18191a;color:#fff;font-family:inherit;font-size:12px}.profile-field input:focus,.profile-field select:focus{border-color:#4285f4}.profile-field input[type="file"]{height:auto;padding:6px;font-size:10px}.avatar.has-image{background-position:center;background-size:cover;background-repeat:no-repeat}.avatar.has-image:after{display:none}
+  .display-options{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin:2px 0 13px;padding:9px 10px;border:1px solid #3e4042;border-radius:10px;background:#1d1f20}.display-options label{display:flex;align-items:center;gap:7px;color:#e4e6eb;font-size:12px;font-weight:650;cursor:pointer}.display-options input{position:relative;width:32px;height:18px;flex:0 0 32px;margin:0;border:0;border-radius:999px;appearance:none;background:#555b62;cursor:pointer;transition:background .15s}.display-options input:before{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .15s}.display-options input:checked{background:#2864ed}.display-options input:checked:before{transform:translateX(14px)}
+  .reaction-controls{margin:0 0 13px;padding:9px 10px;border:1px solid #3e4042;border-radius:10px;background:#1d1f20}.reaction-controls h3{margin:0 0 8px;font-size:12px}.reaction-control{display:grid;grid-template-columns:92px 1fr 38px;align-items:center;gap:7px;margin-top:6px;color:#d7d9dd;font-size:11px}.reaction-control input{width:100%;accent-color:#2864ed}.reaction-control output{text-align:right;color:#fff;font:11px ui-monospace,SFMono-Regular,Menlo,monospace}
+  @media(max-width:1040px){.builder{left:8px;top:auto;right:8px;bottom:8px;width:auto;max-width:398px;margin:auto;transform:scale(.82);transform-origin:bottom center}}
+
+  /* Custom: co/gian khung khi bat tat phan iPhone va phan Messenger. */
+  .phone{height:min(100vh,896px);aspect-ratio:414/896}
+  .phone:before{display:block;height:92px}
+  .status,.homebar{display:block}
+  .topbar{display:flex;top:47px}
+  .chat{top:0;bottom:79px}
+  .generated{padding-top:102px}
+  .composer{bottom:22px}
+  .composer:after{display:block}
+  .phone.hide-iphone-header{height:min(100vh,849px);aspect-ratio:414/849}
+  .phone.hide-iphone-header:before{height:45px}
+  .phone.hide-iphone-header .status{display:none}
+  .phone.hide-iphone-header .topbar{top:0}
+  .phone.hide-iphone-header .generated{padding-top:55px}
+  .phone.has-pinned .chat>:not(.generated):not(.seen){transform:translateY(146px)}
+  .phone.has-pinned .generated{padding-top:156px}
+  .phone.hide-iphone-header.has-pinned .pinned-banner{top:45px}.phone.hide-iphone-header.has-pinned .generated{padding-top:109px}
+  .phone.hide-header.has-pinned .pinned-banner{top:0}.phone.hide-header.has-pinned .generated{padding-top:64px}
+  .phone.hide-iphone-footer{height:min(100vh,864px);aspect-ratio:414/864}
+  .phone.hide-iphone-footer .homebar{display:none}
+  .phone.hide-iphone-footer .chat{bottom:57px}
+  .phone.hide-iphone-footer .composer{bottom:0}
+  .phone.hide-iphone-footer .composer:after{display:none}
+  .phone.hide-iphone-header.hide-iphone-footer{height:min(100vh,817px);aspect-ratio:414/817}
+  .phone.hide-header:before,.phone.hide-header .topbar{display:none}
+  .phone.hide-header .generated{padding-top:10px}
+  .phone.hide-iphone-header.hide-header .generated{padding-top:10px}
+  .phone.hide-footer{height:min(100vh,802px);aspect-ratio:414/802}
+  .phone.hide-footer .composer{display:none}
+  .phone.hide-footer .chat{bottom:0}
+  .phone.hide-footer.hide-iphone-header{height:min(100vh,755px);aspect-ratio:414/755}
+  .phone.hide-footer.hide-iphone-footer{height:min(100vh,770px);aspect-ratio:414/770}
+  .phone.hide-footer.hide-iphone-header.hide-iphone-footer{height:min(100vh,723px);aspect-ratio:414/723}
+  body.embed-mode{display:block;width:100vw;height:100vh;overflow:hidden;background:transparent}
+  body.embed-mode .builder{display:none}
+  body.embed-mode .phone{width:414px;max-width:none;height:896px;max-height:none;transform-origin:top left}
+  body.embed-mode .phone.hide-iphone-header{height:849px}
+  body.embed-mode .phone.hide-iphone-footer{height:864px}
+  body.embed-mode .phone.hide-iphone-header.hide-iphone-footer{height:817px}
+  body.embed-mode .phone.hide-footer{height:802px}
+  body.embed-mode .phone.hide-footer.hide-iphone-header{height:755px}
+  body.embed-mode .phone.hide-footer.hide-iphone-footer{height:770px}
+  body.embed-mode .phone.hide-footer.hide-iphone-header.hide-iphone-footer{height:723px}
+  .generated .chat-image-wrap{position:relative;width:fit-content;max-width:100%}.generated .mine .chat-image-wrap{align-self:flex-end}.generated .chat-image{display:block;max-width:300px;max-height:250px;object-fit:cover;border-radius:18px;background:#f0f0f0}.generated .chat-image.is-sticker{max-width:210px;max-height:190px;object-fit:contain;background:transparent}.generated .image-share{position:absolute;z-index:2;top:50%;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:#f0f2f5;color:#050505;transform:translateY(-50%)}.generated .theirs .image-share{right:-42px}.generated .mine .image-share{left:-42px}.generated .image-share img{display:block;width:22px;height:18px;object-fit:contain}
+  .generated .embed-content{position:relative;display:flex;width:fit-content;min-width:0;max-width:270px;flex-direction:column;align-items:flex-start;gap:3px}.generated .mine .embed-content{align-items:flex-end}
+  .embed-actions,.embed-insert,.embed-append{display:none}
+  body.embed-editable .generated .row:hover .embed-actions,body.embed-editable .generated .row:hover .embed-insert{display:flex}
+  .embed-actions{position:absolute;z-index:9;top:50%;gap:3px;transform:translateY(-50%)}.mine .embed-actions{left:2px}.theirs .embed-actions{right:2px}.embed-actions button,.embed-insert,.embed-append{border:0;border-radius:999px;background:#242526dd;color:#fff;box-shadow:0 2px 8px #0005;cursor:pointer;font-size:11px;font-weight:700}.embed-actions button{width:24px;height:24px;padding:0}.embed-insert{position:absolute;z-index:8;left:50%;top:-8px;height:17px;padding:0 7px;transform:translateX(-50%)}
+  body.embed-editable .embed-append{display:block;position:absolute;z-index:8;right:8px;bottom:98px;padding:6px 9px;background:#2864ed}
+
+  /* Cac tuy chon nay van nam trong DOM de logic hien tai tiep tuc hoat dong. */
+  .reaction-controls,.json-builder,
+  .profile-field:has(#chat-background-color),
+  .profile-field:has(#chat-background-image),
+  .profile-field:has(#theme-tint),
+  .profile-field:has(#theme-strength){display:none}
+
+  .composer-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  .composer-grid .builder-form{position:relative;min-width:0;margin:0}
+  .composer-grid .builder-form>label{margin:0 0 7px;color:#d7d9dd;font-size:13px;font-weight:700}
+  .message-type-tabs{position:absolute;z-index:2;top:26px;right:10px;display:flex;gap:5px;margin:0}
+  .message-type-tabs button{width:34px;height:34px;display:grid;place-items:center;padding:0;border:0;border-radius:8px;background:#35373b;color:#d7d9dd;cursor:pointer;transition:background .15s,color .15s,transform .15s}
+  .message-type-tabs button:hover{background:#46494e;color:#fff}.message-type-tabs button:active{transform:scale(.95)}
+  .message-type-tabs button[aria-selected="true"]{background:#e4e6eb;color:#18191a}
+  .message-type-tabs svg{display:block;width:19px;height:19px;fill:currentColor}.message-type-tabs .stroke-icon{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .compose-panel[hidden]{display:none}
+  .compose-panel{display:grid;gap:7px}
+  .compose-panel:not([data-panel="message"]){padding-top:42px}
+  .compose-panel textarea,.compose-panel input,.compose-panel select{width:100%;min-width:0;padding:9px 10px;border:1px solid #4d5156;border-radius:8px;outline:none;background:#18191a;color:#fff;font-family:inherit;font-size:13px;line-height:18px}
+  .compose-panel textarea{height:132px;resize:vertical}.compose-panel[data-panel="message"] textarea{padding:14px 200px 14px 14px;font-size:14px;line-height:20px}
+  .compose-panel textarea:focus,.compose-panel input:focus,.compose-panel select:focus{border-color:#8a8d91}
+  .compose-panel input[type="file"]{padding:7px;font-size:10px;color:#b0b3b8}
+  .compose-options{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .compose-field-label{display:block;margin:0 0 4px!important;color:#b0b3b8;font-size:10px!important;font-weight:600!important}
+  .builder-form .builder-send{width:100%;height:34px;margin-top:7px;border-radius:8px}
+  .compose-error{min-height:0;margin:5px 0 0;color:#ff9b9b;font-size:10px;line-height:14px}
+
+  body{padding:0}
+  .builder{width:620px}
+  .message-manager{position:fixed;z-index:20;left:656px;right:auto;top:24px;width:400px;max-height:calc(100vh - 48px);overflow-y:auto;padding:16px;border:1px solid #34363a;border-radius:16px;background:#242526;color:#f5f6f7;box-shadow:0 16px 45px #0007}
+  .preview-stage{position:fixed;left:1068px;top:0;width:414px;height:100vh;display:grid;place-items:center}
+  body.embed-mode .preview-stage{position:static;width:414px;height:auto;display:block}
+  .message-manager h2{margin:0;font-size:17px}.manager-note{margin:4px 0 13px;color:#b0b3b8;font-size:11px;line-height:15px}
+  .manager-list{display:flex;flex-direction:column;padding:2px 0}.manager-empty{padding:18px 8px;text-align:center;color:#b0b3b8;font-size:12px}
+  .manager-insert{position:relative;width:100%;height:25px;flex:none;border:0;background:transparent;color:#b0b3b8;cursor:pointer}.manager-insert:before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:#3a3b3c}.manager-insert span{position:relative;display:inline-grid;width:19px;height:19px;place-items:center;border:1px solid #555;border-radius:50%;background:#242526;color:#fff;font-size:14px;line-height:1;transition:background .15s}.manager-insert:hover span{background:#4e4f50}
+  .manager-item{position:relative;width:max-content;max-width:calc(100% - 92px);min-width:72px;padding:8px 10px;border-radius:15px;background:#3a3b3c;color:#fff}.manager-item.theirs{align-self:flex-start;border-bottom-left-radius:4px}.manager-item.mine{align-self:flex-end;border-bottom-right-radius:4px;background:#2864ed}.manager-item.between{align-self:center;max-width:100%;padding:2px 8px;background:transparent;color:#b0b3b8;text-align:center}
+  .manager-copy{min-width:0}.manager-kind{color:#b0b3b8;font-size:8px;line-height:11px;font-weight:750;text-transform:uppercase}.manager-item.mine .manager-kind{color:#dbe6ff}.manager-summary{overflow-wrap:anywhere;margin-top:2px;color:inherit;font-size:12px;line-height:16px;white-space:pre-wrap}.manager-quote{max-width:100%;margin:3px 0 5px;padding:5px 7px;border-left:2px solid #ffffff99;border-radius:4px;background:#0002;color:#e4e6eb;font-size:10px;line-height:13px}.manager-thumb{display:block;width:112px;max-width:100%;height:70px;margin-top:5px;border-radius:8px;object-fit:cover;background:#18191a}
+  .manager-actions{position:absolute;top:50%;display:flex;gap:3px;opacity:.3;transform:translateY(-50%);transition:opacity .15s}.manager-item.theirs .manager-actions,.manager-item.between .manager-actions{left:calc(100% + 6px)}.manager-item.mine .manager-actions{right:calc(100% + 6px)}.manager-item:hover .manager-actions,.manager-item:focus-within .manager-actions{opacity:1}.manager-actions button{width:25px;height:25px;padding:0;border:0;border-radius:50%;background:#4e4f50;color:#fff;cursor:pointer;font-size:12px}.manager-actions button:hover{background:#65676b}
+  .composer-context{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0 0;padding:8px 9px;border:1px solid #4d5156;border-radius:8px;background:#1d1f20;color:#e4e6eb;font-size:11px;line-height:14px}.composer-context[hidden]{display:none}.composer-context button{flex:none;border:0;background:transparent;color:#b0b3b8;cursor:pointer;font-size:16px}
+  .reaction-composer{margin:10px 0 0;padding:9px;border:1px solid #4d5156;border-radius:8px;background:#1d1f20}.reaction-composer[hidden]{display:none}.reaction-composer label{display:block;margin-bottom:6px;color:#d7d9dd;font-size:11px;font-weight:650}.reaction-composer-row{display:grid;grid-template-columns:minmax(0,1fr) 34px auto auto;gap:6px}.reaction-composer input{min-width:0;height:34px;padding:6px 9px;border:1px solid #4d5156;border-radius:7px;outline:none;background:#18191a;color:#fff;font-size:18px}.reaction-composer input:focus{border-color:#8a8d91}.reaction-composer button{height:34px;padding:0 10px;border:0;border-radius:7px;background:#e4e6eb;color:#18191a;font-size:11px;font-weight:700;cursor:pointer}.reaction-composer .reaction-remove,.reaction-composer .reaction-picker-open{background:#3a3b3c;color:#e4e6eb}.reaction-composer .reaction-picker-open{padding:0;font-size:17px}
+  .profile-field input[hidden]{display:none}.icon-control-row{display:grid;grid-template-columns:minmax(0,1fr) 38px 38px;gap:6px}.icon-control-row input{height:38px!important;font-size:18px!important}.icon-control-row button{height:38px;padding:0;border:1px solid #4d5156;border-radius:8px;background:#303236;color:#e4e6eb;cursor:pointer;font-size:17px}.icon-control-row button:hover{border-color:#8a8d91}.icon-picker-modal{position:fixed;z-index:100;inset:0;display:grid;place-items:center;padding:20px;background:#000a}.icon-picker-modal[hidden]{display:none}.icon-picker-dialog{width:min(390px,100%);max-height:min(520px,calc(100vh - 40px));overflow:auto;padding:16px;border:1px solid #4d5156;border-radius:8px;background:#242526;color:#fff;box-shadow:0 20px 70px #000b}.icon-picker-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.icon-picker-head h2{margin:0;font-size:17px}.icon-picker-close{width:30px;height:30px;border:0;border-radius:50%;background:#3a3b3c;color:#fff;font-size:18px;cursor:pointer}.icon-picker-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}.icon-choice{aspect-ratio:1;border:1px solid transparent;border-radius:50%;background:#303236;font-size:24px;line-height:1;cursor:pointer}.icon-choice:hover,.icon-choice:focus-visible{border-color:#8a8d91;background:#3a3b3c;outline:0}.icon-choice[aria-pressed="true"]{border-color:#fff;background:#4e4f50}
+  .icon-picker-search{width:100%;height:38px;margin:0 0 12px;padding:0 11px;border:1px solid #4d5156;border-radius:7px;outline:0;background:#18191a;color:#fff;font:inherit;font-size:13px}.icon-picker-search:focus{border-color:#8a8d91}.icon-choice[hidden]{display:none}
+  .profile-online-toggle{height:36px;display:flex;align-items:center;justify-content:space-between;padding:0 9px;border:1px solid #4d5156;border-radius:9px;background:#18191a;color:#e4e6eb;font-size:12px}.profile-online-toggle input{position:relative;width:32px;height:18px;flex:none;margin:0;padding:0;border:0;border-radius:999px;appearance:none;background:#555b62;cursor:pointer}.profile-online-toggle input:before{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .15s}.profile-online-toggle input:checked{background:#31a24c}.profile-online-toggle input:checked:before{transform:translateX(14px)}
+  .head-avatar-wrap{position:relative;width:36px;height:36px;flex:0 0 36px;margin-left:6.35px}.head-avatar-wrap .head-avatar{display:block;margin-left:0}.head-avatar-wrap.is-online .head-avatar{-webkit-mask-image:radial-gradient(circle 6px at 32px 32px,transparent 0 5.5px,#000 6px);mask-image:radial-gradient(circle 6px at 32px 32px,transparent 0 5.5px,#000 6px)}.online-indicator{position:absolute;z-index:2;right:0;bottom:0;display:none;width:8px;height:8px;border-radius:50%;background:#31a24c}.head-avatar-wrap.is-online .online-indicator{display:block}
+  @media(max-width:1500px){
+    .builder{left:8px;right:auto;top:8px;bottom:auto;width:320px;max-width:none;max-height:calc(50vh - 12px);margin:0;transform:none}
+    .message-manager{left:8px;right:auto;top:calc(50vh + 4px);width:320px;max-height:calc(50vh - 12px)}
+    .preview-stage{left:auto;right:8px}
+    .composer-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<aside class="builder" aria-label="Công cụ tạo tin nhắn">
+  <h2>Tạo đoạn tin nhắn</h2><p class="builder-note">Enter để gửi · Shift+Enter để xuống dòng</p>
+  <div class="display-options">
+    <label><input id="show-iphone-header" type="checkbox" checked>Thanh iPhone</label>
+    <label><input id="show-iphone-footer" type="checkbox" checked>Home bar</label>
+    <label><input id="show-header" type="checkbox" checked>Hiện header</label>
+    <label><input id="show-footer" type="checkbox" checked>Hiện footer</label>
+  </div>
+  <section class="reaction-controls" aria-label="Điều chỉnh reaction">
+    <h3>Điều chỉnh reaction</h3>
+    <label class="reaction-control">Width<input id="reaction-width" type="range" min="12" max="40" value="22"><output>22px</output></label>
+    <label class="reaction-control">Height<input id="reaction-height" type="range" min="10" max="34" value="17"><output>17px</output></label>
+    <label class="reaction-control">Emoji size<input id="reaction-font-size" type="range" min="7" max="24" value="12"><output>12px</output></label>
+    <label class="reaction-control">Right<input id="reaction-right" type="range" min="-12" max="20" value="3"><output>3px</output></label>
+    <label class="reaction-control">Bottom<input id="reaction-bottom" type="range" min="-30" max="5" value="-12"><output>-12px</output></label>
+    <label class="reaction-control">Khoét thêm<input id="reaction-cutout-extra" type="range" min="0" max="8" step="0.5" value="4"><output>4px</output></label>
+  </section>
+  <div class="profile-fields">
+    <div class="profile-field wide"><label for="app-style">Nền tảng</label><select id="app-style"><option value="messenger" selected>Messenger</option><option value="instagram">Instagram</option></select></div>
+    <div class="profile-field wide"><label for="messenger-theme">Theme</label><select id="messenger-theme"><option value="classic">Mặc định</option><option value="olivia">Olivia Rodrigo</option></select></div>
+    <div class="profile-field wide"><label for="profile-avatar">Avatar</label><input id="profile-avatar" type="file" accept="image/*"></div>
+    <div class="profile-field"><label for="chat-background-color">Màu nền chat</label><input id="chat-background-color" type="color" value="#ffffff"></div>
+    <div class="profile-field"><label for="chat-background-image">Ảnh nền chat</label><input id="chat-background-image" type="file" accept="image/*"></div>
+    <div class="profile-field"><label for="theme-tint">Màu phủ theme</label><input id="theme-tint" type="color" value="#aeb2ef"></div>
+    <div class="profile-field"><label for="theme-strength">Độ phủ theme</label><input id="theme-strength" type="range" min="0" max="100" value="58"></div>
+    <div class="profile-field wide"><label for="footer-emoji">Icon thay nút Like</label><div class="icon-control-row"><input id="footer-emoji" type="text" placeholder="Nhập emoji"><button id="open-icon-picker" type="button" title="Mở thư viện icon" aria-label="Mở thư viện icon">☺</button><button id="reset-footer-icon" type="button" title="Khôi phục nút Like" aria-label="Khôi phục nút Like">↺</button></div><input id="footer-icon" type="file" accept="image/*,.svg" hidden></div>
+    <div class="profile-field"><label for="profile-name">Tên người dùng</label><input id="profile-name" type="text" value="Tên người dùng"></div>
+    <div class="profile-field"><label for="iphone-time">Giờ iPhone</label><input id="iphone-time" type="text" value="01:26" inputmode="numeric"></div>
+    <div class="profile-field"><label for="battery-percent">Phần trăm pin</label><input id="battery-percent" type="number" min="1" max="100" value="36" inputmode="numeric"></div>
+    <div class="profile-field"><label for="battery-state">Trạng thái pin</label><select id="battery-state"><option value="saving" selected>Tiết kiệm pin</option><option value="normal">Bình thường</option><option value="low">Pin yếu</option></select></div>
+    <div class="profile-field wide"><label for="battery-charging">Sạc pin</label><select id="battery-charging"><option value="no" selected>Không sạc</option><option value="yes">Đang sạc</option></select></div>
+    <div class="profile-field wide"><label for="profile-activity">Trạng thái hoạt động</label><input id="profile-activity" type="text" value="Hoạt động 2 giờ trước"></div>
+    <div class="profile-field wide"><label for="profile-online">Hiển thị hoạt động</label><div class="profile-online-toggle"><span>Đang hoạt động</span><input id="profile-online" type="checkbox" role="switch" aria-label="Đang hoạt động"></div></div>
+    <div class="profile-field wide"><label for="show-pinned">Ghim tin nhắn</label><div class="profile-online-toggle"><span>Hiển thị thanh ghim</span><input id="show-pinned" type="checkbox" role="switch" aria-label="Hiển thị thanh ghim"></div></div>
+    <div class="profile-field wide pinned-fields" id="pinned-fields" hidden><label for="pinned-title">Tiêu đề ghim</label><input id="pinned-title" type="text" value="Tin nhắn đã ghim"><label for="pinned-detail">Nội dung ghim</label><input id="pinned-detail" type="text" value="Chạm để xem tin nhắn"></div>
+  </div>
+  <div class="composer-context" id="composer-context" hidden><span id="composer-context-text"></span><button id="composer-context-cancel" type="button" title="Hủy thao tác" aria-label="Hủy thao tác">×</button></div>
+  <div class="reaction-composer" id="reaction-composer" hidden><label id="reaction-composer-label" for="reaction-message-input">Thả reaction</label><div class="reaction-composer-row"><input id="reaction-message-input" type="text" placeholder="Nhập emoji" autocomplete="off"><button class="reaction-picker-open" id="open-reaction-picker" type="button" title="Mở thư viện reaction" aria-label="Mở thư viện reaction">☺</button><button id="reaction-apply" type="button">Áp dụng</button><button class="reaction-remove" id="reaction-remove" type="button">Gỡ</button></div></div>
+  <div class="composer-grid">
+  <form class="builder-form" data-side="theirs" data-kind="message">
+    <label>Đối phương</label>
+    <div class="message-type-tabs" role="tablist" aria-label="Loại nội dung bên trái">
+      <button type="button" data-kind="image" aria-selected="false" title="Gửi ảnh" aria-label="Gửi ảnh"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Zm0 16H5l4.5-6 3.5 4.5 2.5-3L19 19ZM8.5 10A1.5 1.5 0 1 0 8.5 7a1.5 1.5 0 0 0 0 3Z"/></svg></button><button type="button" data-kind="reply" aria-selected="false" title="Tin nhắn trả lời" aria-label="Tin nhắn trả lời"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 2H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h4l4 3 4-3h4a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Zm-4.2 12.2A5.4 5.4 0 0 1 12 15.8a5.4 5.4 0 0 1-3.8-1.6l1.2-1.1a3.7 3.7 0 0 0 5.2 0l1.2 1.1ZM8.5 10.5a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5Zm7 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5Z"/></svg></button><button type="button" data-kind="call" data-call-type-choice="voice" aria-selected="false" title="Gọi thoại" aria-label="Gọi thoại"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24c1.1.36 2.25.54 3.43.54A1.17 1.17 0 0 1 21 16.67v3.66a1.17 1.17 0 0 1-1.17 1.17A17.33 17.33 0 0 1 2.5 4.17 1.17 1.17 0 0 1 3.67 3h3.66A1.17 1.17 0 0 1 8.5 4.17c0 1.18.18 2.33.54 3.43a1 1 0 0 1-.24 1l-2.2 2.2Z"/></svg></button><button type="button" data-kind="call" data-call-type-choice="video" aria-selected="false" title="Gọi video" aria-label="Gọi video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6a2 2 0 0 1 2 2v1.5l3.2-2a1.2 1.2 0 0 1 1.8 1.02v6.96a1.2 1.2 0 0 1-1.8 1.02l-3.2-2V16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h11Z"/></svg></button>
+      <button type="button" data-kind="voice" aria-selected="false" title="Gửi tin nhắn thoại" aria-label="Gửi tin nhắn thoại"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14a3.5 3.5 0 0 0 3.5-3.5v-5a3.5 3.5 0 1 0-7 0v5A3.5 3.5 0 0 0 12 14Zm-6-3.5a1 1 0 0 1 2 0 4 4 0 0 0 8 0 1 1 0 0 1 2 0 6 6 0 0 1-5 5.91V19h2a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2h2v-2.59A6 6 0 0 1 6 10.5Z"/></svg></button>
+    </div>
+    <div class="compose-panel" data-panel="message"><textarea id="left-message" data-primary-text placeholder="Nhập tin bên trái…"></textarea></div>
+    <div class="compose-panel" data-panel="voice" hidden><label class="compose-field-label">Thời lượng voice<input type="text" data-voice-duration value="0:04" inputmode="numeric" placeholder="0:04"></label></div>
+    <div class="compose-panel" data-panel="image" hidden><input type="file" data-image accept="image/*"><input type="text" data-image-caption placeholder="Chú thích ảnh (không bắt buộc)"></div>
+    <div class="compose-panel" data-panel="call" hidden><div class="compose-options"><div><span class="compose-field-label">Loại cuộc gọi</span><select data-call-type><option value="voice">Gọi thoại</option><option value="video">Gọi video</option></select></div><div><span class="compose-field-label">Trạng thái</span><select data-call-state><option value="connected">Đã kết nối</option><option value="canceled">Cuộc gọi nhỡ</option></select></div></div><input type="text" data-call-detail placeholder="Thời lượng hoặc thời gian, ví dụ: 16 giây"></div>
+    <div class="compose-panel" data-panel="reply" hidden><label class="compose-field-label">Nhãn trả lời<input type="text" data-reply-label></label><textarea data-reply-quote placeholder="Nội dung tin nhắn được trả lời"></textarea><textarea data-reply-message data-primary-text placeholder="Nhập nội dung trả lời"></textarea></div>
+    <button class="builder-send left" type="submit">Gửi trái</button><p class="compose-error" aria-live="polite"></p>
+  </form>
+  <form class="builder-form" data-side="mine" data-kind="message">
+    <label>Tôi</label>
+    <div class="message-type-tabs" role="tablist" aria-label="Loại nội dung bên phải">
+      <button type="button" data-kind="image" aria-selected="false" title="Gửi ảnh" aria-label="Gửi ảnh"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Zm0 16H5l4.5-6 3.5 4.5 2.5-3L19 19ZM8.5 10A1.5 1.5 0 1 0 8.5 7a1.5 1.5 0 0 0 0 3Z"/></svg></button><button type="button" data-kind="reply" aria-selected="false" title="Tin nhắn trả lời" aria-label="Tin nhắn trả lời"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 2H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h4l4 3 4-3h4a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Zm-4.2 12.2A5.4 5.4 0 0 1 12 15.8a5.4 5.4 0 0 1-3.8-1.6l1.2-1.1a3.7 3.7 0 0 0 5.2 0l1.2 1.1ZM8.5 10.5a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5Zm7 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5Z"/></svg></button><button type="button" data-kind="call" data-call-type-choice="voice" aria-selected="false" title="Gọi thoại" aria-label="Gọi thoại"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24c1.1.36 2.25.54 3.43.54A1.17 1.17 0 0 1 21 16.67v3.66a1.17 1.17 0 0 1-1.17 1.17A17.33 17.33 0 0 1 2.5 4.17 1.17 1.17 0 0 1 3.67 3h3.66A1.17 1.17 0 0 1 8.5 4.17c0 1.18.18 2.33.54 3.43a1 1 0 0 1-.24 1l-2.2 2.2Z"/></svg></button><button type="button" data-kind="call" data-call-type-choice="video" aria-selected="false" title="Gọi video" aria-label="Gọi video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6a2 2 0 0 1 2 2v1.5l3.2-2a1.2 1.2 0 0 1 1.8 1.02v6.96a1.2 1.2 0 0 1-1.8 1.02l-3.2-2V16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h11Z"/></svg></button>
+      <button type="button" data-kind="voice" aria-selected="false" title="Gửi tin nhắn thoại" aria-label="Gửi tin nhắn thoại"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14a3.5 3.5 0 0 0 3.5-3.5v-5a3.5 3.5 0 1 0-7 0v5A3.5 3.5 0 0 0 12 14Zm-6-3.5a1 1 0 0 1 2 0 4 4 0 0 0 8 0 1 1 0 0 1 2 0 6 6 0 0 1-5 5.91V19h2a1 1 0 1 1 0 2H9a1 1 0 1 1 0-2h2v-2.59A6 6 0 0 1 6 10.5Z"/></svg></button>
+    </div>
+    <div class="compose-panel" data-panel="message"><textarea id="right-message" data-primary-text placeholder="Nhập tin bên phải…"></textarea></div>
+    <div class="compose-panel" data-panel="voice" hidden><label class="compose-field-label">Thời lượng voice<input type="text" data-voice-duration value="0:04" inputmode="numeric" placeholder="0:04"></label></div>
+    <div class="compose-panel" data-panel="image" hidden><input type="file" data-image accept="image/*"><input type="text" data-image-caption placeholder="Chú thích ảnh (không bắt buộc)"></div>
+    <div class="compose-panel" data-panel="call" hidden><div class="compose-options"><div><span class="compose-field-label">Loại cuộc gọi</span><select data-call-type><option value="voice">Gọi thoại</option><option value="video">Gọi video</option></select></div><div><span class="compose-field-label">Trạng thái</span><select data-call-state><option value="connected">Đã kết nối</option><option value="canceled">Cuộc gọi nhỡ</option></select></div></div><input type="text" data-call-detail placeholder="Thời lượng hoặc thời gian, ví dụ: 16 giây"></div>
+    <div class="compose-panel" data-panel="reply" hidden><label class="compose-field-label">Nhãn trả lời<input type="text" data-reply-label></label><textarea data-reply-quote placeholder="Nội dung tin nhắn được trả lời"></textarea><textarea data-reply-message data-primary-text placeholder="Nhập nội dung trả lời"></textarea></div>
+    <button class="builder-send right" type="submit">Gửi phải</button><p class="compose-error" aria-live="polite"></p>
+  </form>
+  </div>
+  <form class="builder-form" id="between-text-form"><label for="between-text-input">Text giữa 2 tin nhắn</label><div class="builder-line"><input id="between-text-input" type="text" placeholder="Ví dụ: 16:17, Hôm qua hoặc nội dung bất kỳ"><button class="builder-send left" type="submit">Thêm text</button></div></form>
+  <div class="json-builder">
+    <label for="conversation-json">Nạp hội thoại bằng JSON</label>
+    <textarea id="conversation-json" spellcheck="false"></textarea>
+    <div class="builder-actions"><button type="button" id="render-json">Áp dụng JSON</button><button type="button" id="format-json">Định dạng</button></div>
+    <p class="json-error" id="json-error" aria-live="polite"></p>
+  </div>
+  <div class="builder-actions"><button type="button" id="clear-chat">Xóa tất cả</button><button type="button" id="restore-sample">Khôi phục mẫu</button></div>
+  <div class="builder-actions export"><button type="button" id="export-current">Ảnh hiện tại</button><button type="button" id="export-all">Tất cả tin</button></div>
+  <p class="export-status" id="export-status" aria-live="polite"></p>
+</aside>
+<aside class="message-manager" aria-label="Quản lý hội thoại">
+  <h2>Quản lý tin nhắn</h2><p class="manager-note">Chèn, sửa hoặc xóa nội dung tại bất kỳ vị trí nào.</p>
+  <div class="manager-list" id="manager-list"></div>
+</aside>
+<div class="icon-picker-modal" id="icon-picker-modal" hidden>
+  <section class="icon-picker-dialog" role="dialog" aria-modal="true" aria-labelledby="icon-picker-title">
+    <header class="icon-picker-head"><h2 id="icon-picker-title">Chọn icon</h2><button class="icon-picker-close" id="close-icon-picker" type="button" title="Đóng" aria-label="Đóng">×</button></header>
+    <input class="icon-picker-search" id="icon-picker-search" type="search" placeholder="Tìm icon hoặc tên..." autocomplete="off">
+    <div class="icon-picker-grid" id="icon-picker-grid"></div>
+  </section>
+</div>
+<div class="preview-stage">
+<main class="phone" aria-label="Cuộc trò chuyện Messenger với Tên người dùng">
+  <div class="status"><div class="clock">01:26</div><div class="signals"><svg class="cell-icon" viewBox="293.667 17.6666 17 10.6667"><path fill-rule="evenodd" d="M294.667 24.3333H295.667C296.219 24.3333 296.667 24.781 296.667 25.3333V27.3333C296.667 27.8856 296.219 28.3333 295.667 28.3333H294.667C294.114 28.3333 293.667 27.8856 293.667 27.3333V25.3333C293.667 24.781 294.114 24.3333 294.667 24.3333ZM299.333 22.3333H300.333C300.886 22.3333 301.333 22.781 301.333 23.3333V27.3333C301.333 27.8856 300.886 28.3333 300.333 28.3333H299.333C298.781 28.3333 298.333 27.8856 298.333 27.3333V23.3333C298.333 22.781 298.781 22.3333 299.333 22.3333ZM304 20H305C305.552 20 306 20.4477 306 21V27.3333C306 27.8856 305.552 28.3333 305 28.3333H304C303.448 28.3333 303 27.8856 303 27.3333V21C303 20.4477 303.448 20 304 20ZM308.667 17.6666H309.667C310.219 17.6666 310.667 18.1143 310.667 18.6666V27.3333C310.667 27.8856 310.219 28.3333 309.667 28.3333H308.667C308.114 28.3333 307.667 27.8856 307.667 27.3333V18.6666C307.667 18.1143 308.114 17.6666 308.667 17.6666Z"/></svg><svg class="wifi-icon" viewBox="315.693 16.3208 15.273 11.9755"><path fill-rule="evenodd" d="M323.33 19.608C325.546 19.6081 327.677 20.4596 329.283 21.9863C329.404 22.1042 329.598 22.1027 329.717 21.983L330.873 20.8163C330.933 20.7556 330.967 20.6734 330.966 20.5878C330.966 20.5022 330.931 20.4204 330.87 20.3603C326.655 16.3208 320.005 16.3208 315.79 20.3603C315.729 20.4203 315.694 20.5021 315.694 20.5877C315.693 20.6733 315.727 20.7556 315.787 20.8163L316.943 21.983C317.062 22.1029 317.256 22.1044 317.377 21.9863C318.983 20.4595 321.114 19.608 323.33 19.608ZM323.33 23.4037C324.548 23.4036 325.722 23.8561 326.624 24.6733C326.746 24.7893 326.939 24.7868 327.058 24.6677L328.212 23.501C328.273 23.4398 328.307 23.3568 328.306 23.2705C328.305 23.1843 328.27 23.102 328.208 23.042C325.459 20.4856 321.204 20.4856 318.455 23.042C318.393 23.102 318.358 23.1843 318.357 23.2706C318.356 23.3569 318.39 23.4399 318.451 23.501L319.605 24.6677C319.724 24.7868 319.917 24.7893 320.039 24.6733C320.941 23.8567 322.114 23.4042 323.33 23.4037ZM325.549 26.188C325.611 26.1274 325.645 26.044 325.643 25.9575C325.642 25.871 325.604 25.7891 325.54 25.731C324.264 24.6521 322.396 24.6521 321.121 25.731C321.056 25.789 321.019 25.8709 321.017 25.9574C321.015 26.0439 321.049 26.1274 321.111 26.188L323.109 28.2037C323.167 28.2629 323.247 28.2963 323.33 28.2963C323.414 28.2963 323.493 28.2629 323.552 28.2037L325.549 26.188Z"/></svg><span class="battery" style="--level:36"><span class="battery-level">36</span></span></div></div>
+  <header class="topbar"><svg class="back" viewBox="19 58 13 23"><path d="M31.183 60.5607C31.7688 59.9749 31.7688 59.0251 31.183 58.4393C30.5972 57.8536 29.6475 57.8536 29.0617 58.4393L19.4393 68.0617C18.8536 68.6475 18.8536 69.5972 19.4393 70.183L29.0617 79.8054C29.6475 80.3912 30.5972 80.3912 31.183 79.8054C31.7688 79.2196 31.7688 78.2699 31.183 77.6841L22.6213 69.1224L31.183 60.5607Z"/></svg><span class="unread">6</span><span class="avatar head-avatar"></span><div class="identity"><div class="name">Tên người dùng</div><div class="presence">Hoạt động 2 giờ trước</div></div><div class="head-actions"><svg viewBox="285 57 24 24"><path d="M294.878 70.9919L295.008 71.1218C297.246 73.2882 299.118 74.3056 300.626 74.174L301.061 73.7687C301.678 73.2064 302.144 72.85 302.458 72.6994C303.112 72.3859 303.571 72.3922 304.809 73.0625C306.439 73.9442 307.564 74.9691 308.139 75.5441C308.673 76.078 308.507 76.9977 308.32 77.4057L308.196 77.6333C307.862 78.2129 306.652 80.1249 304.333 80.4521C303.452 80.5764 302.34 80.4624 301.036 80.0696C298.242 79.1024 295.46 77.3297 292.689 74.7514L292.197 74.2834L292.192 74.288L291.954 74.046L291.712 73.808L291.717 73.8034L291.249 73.3107C288.67 70.5402 286.898 67.7581 285.93 64.9643C285.538 63.6601 285.424 62.5477 285.548 61.6666C285.898 59.1838 288.066 57.9724 288.469 57.7467L288.51 57.7236C288.858 57.5224 289.881 57.2859 290.456 57.8608L290.728 58.1408C291.321 58.7676 292.182 59.7938 292.938 61.1906C293.608 62.4293 293.614 62.888 293.301 63.5416C293.117 63.9253 292.625 64.5361 291.826 65.3739C291.694 66.8816 292.712 68.7543 294.878 70.9919Z"/></svg><svg viewBox="332 60 27 18"><path fill-rule="evenodd" d="M347.2 60C349.299 60 351 61.7269 351 63.8571V74.1429C351 76.2731 349.299 78 347.2 78H335.8C333.701 78 332 76.2731 332 74.1429V63.8571C332 61.7269 333.701 60 335.8 60H347.2ZM358.866 64.0223C358.954 64.1731 359 64.3428 359 64.5153V73.4849C359 74.0455 358.522 74.5 357.933 74.5C357.752 74.5 357.574 74.456 357.415 74.3723L353.686 72.4005C353.263 72.1767 353 71.7521 353 71.2912V66.7089C353 66.2481 353.263 65.8235 353.686 65.5997L357.415 63.6279C357.93 63.3557 358.58 63.5322 358.866 64.0223Z"/></svg></div></header>
+  <div class="ig-header-actions" aria-hidden="true"><svg viewBox="0 0 28 28"><path d="M14 25c6.1 0 11-4.9 11-11S20.1 3 14 3 3 7.9 3 14v7l4-3.1A10.8 10.8 0 0 0 14 25Z"/><path d="M10 13h8M14 9v8"/></svg><svg viewBox="0 0 28 28"><path d="M7.6 4.8 11 4c.8-.2 1.6.2 1.9 1l1.1 3c.2.7.1 1.4-.4 1.9l-1.8 1.8c1.6 3.2 3.3 4.9 6.5 6.5l1.8-1.8c.5-.5 1.2-.6 1.9-.4l3 1.1c.8.3 1.2 1.1 1 1.9l-.8 3.4c-.2.9-1 1.5-1.9 1.5C12.7 23.9 4.1 15.3 4.1 4.7c0-.9.6-1.7 1.5-1.9Z"/></svg><svg viewBox="0 0 30 28"><rect x="3" y="5" width="18" height="18" rx="3"/><path d="m21 11 5-3v12l-5-3Z"/></svg></div>
+  <span class="ig-back-icon" aria-hidden="true"></span><section class="pinned-banner" id="pinned-banner" aria-label="Tin nhắn đã ghim" hidden><span class="pinned-icon" aria-hidden="true"><img src="thumbtack.png" alt=""></span><div class="pinned-copy"><div class="pinned-title">Tin nhắn đã ghim</div><div class="pinned-detail">Chạm để xem tin nhắn</div></div><svg class="pinned-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></section>
+  <section class="chat">
+    <div class="generated" id="generated-messages" aria-live="polite" hidden></div>
+    <div class="row mine m1"><div class="bubble">a thấy mmo giờ dễ đi quá</div></div><span class="react">😆</span>
+    <div class="row theirs m2"><span class="avatar mini"></span><div class="bubble">kênh a dc mấy $ r thế :))</div></div>
+    <div class="row mine m3"><div class="bubble">rách vải cứt</div></div><span class="react2">😆</span>
+    <div class="row mine group first m4"><div class="bubble">bật kiếm tiền xong nó tắt đề xuất</div></div>
+    <div class="row mine group m5"><div class="bubble">a đ làm nữa</div></div>
+    <div class="row mine group m6"><div class="bubble">bỏ kênh</div></div>
+    <div class="row mine group m7"><div class="bubble">ai mua thì mua</div></div>
+    <div class="row mine group last m8"><div class="bubble">bực vãi</div></div>
+    <div class="timestamp">20:26, TH 5</div>
+    <div class="reply-label"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.497 1.035C7.593-.088 9.5.688 9.5 2.257V4.54c1.923.215 3.49 1.246 4.593 2.672C15.328 8.808 16 10.91 16 13v.305c0 .632-.465 1.017-.893 1.127-.422.11-.99.005-1.318-.493-.59-.894-1.2-1.482-1.951-1.859-.611-.307-1.359-.496-2.338-.558v2.23c0 1.57-1.908 2.346-3.003 1.222L.893 9.223a1.75 1.75 0 0 1 .001-2.444l5.603-5.744z"/></svg><span>Tên người dùng đã trả lời bạn</span></div>
+    <div class="reply-preview">bật kiếm tiền xong nó tắt<br>đề xuất</div>
+    <div class="row incoming i1"><div class="bubble">thấy vẫn có view mà</div></div>
+    <div class="row incoming i2"><div class="bubble">nó thử kênh đấy</div></div>
+    <div class="row incoming i3"><div class="bubble">làm tiếp đi a nổ view là bú</div></div>
+    <div class="row incoming i4"><div class="bubble">:)))</div></div>
+    <span class="avatar reply-avatar"></span>
+  </section>
+  <div class="preview-watermark" id="preview-watermark" aria-hidden="true">FAKE MESSENGER</div>
+  <footer class="composer">
+    <button class="tool plus" aria-label="Thêm"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="M12 6.25v11.5M6.25 12h11.5" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg></button>
+    <button class="tool" aria-label="Camera"><svg viewBox="58.5 740 25 22"><path fill-rule="evenodd" d="M73.1225 740C73.7671 740 74.388 740.242 74.8617 740.676L76.5133 742.193C76.9278 742.574 77.455 742.806 78.0122 742.858L78.2525 742.87H79.0128C81.491 742.87 83.5 744.868 83.5 747.333V757.536C83.5 760.002 81.491 762 79.0128 762H62.9872C60.509 762 58.5 760.002 58.5 757.536V747.333C58.5 744.868 60.509 742.87 62.9872 742.87H63.7475C64.3921 742.87 65.013 742.628 65.4867 742.193L67.1383 740.676C67.612 740.242 68.2329 740 68.8775 740H73.1225ZM71 745.5C67.4101 745.5 64.5 748.41 64.5 752C64.5 755.59 67.4101 758.5 71 758.5C74.5899 758.5 77.5 755.59 77.5 752C77.5 748.41 74.5899 745.5 71 745.5ZM71 747.5C73.4853 747.5 75.5 749.515 75.5 752C75.5 754.485 73.4853 756.5 71 756.5C68.5147 756.5 66.5 754.485 66.5 752C66.5 749.515 68.5147 747.5 71 747.5Z"/></svg></button>
+    <button class="tool" aria-label="Ảnh"><svg viewBox="104 740 22 22" preserveAspectRatio="none"><path fill-rule="evenodd" d="M122 740C124.209 740 126 741.791 126 744V758C126 760.209 124.209 762 122 762H108C105.791 762 104 760.209 104 758V744C104 741.791 105.791 740 108 740H122ZM121.5 742.5H108.5C107.395 742.5 106.5 743.395 106.5 744.5V754.465C106.5 754.576 106.59 754.665 106.7 754.665C106.731 754.665 106.762 754.658 106.79 754.644L112.304 751.618C114 750.764 116 750.764 117.697 751.617L123.21 754.64C123.309 754.69 123.429 754.65 123.479 754.551C123.493 754.524 123.5 754.493 123.5 754.462V744.5C123.5 743.395 122.605 742.5 121.5 742.5ZM110.5 744C111.881 744 113 745.119 113 746.5C113 747.881 111.881 749 110.5 749C109.119 749 108 747.881 108 746.5C108 745.119 109.119 744 110.5 744Z"/></svg></button>
+    <button class="tool" aria-label="Micrô"><svg viewBox="0 0 640 640" aria-hidden="true"><path d="M320 64C267 64 224 107 224 160v128c0 53 43 96 96 96s96-43 96-96V160c0-53-43-96-96-96Z"/><path d="M152 256v32c0 92.8 75.2 168 168 168s168-75.2 168-168v-32" fill="none" stroke="currentColor" stroke-width="56" stroke-linecap="round"/><path d="M295 464h50v48h-50Z"/><path d="M218 512h204c17.7 0 32 14.3 32 32s-14.3 32-32 32H218c-17.7 0-32-14.3-32-32s14.3-32 32-32Z"/></svg></button>
+    <div class="composer-input"><span>Aa</span><svg class="smile" viewBox="289 739 24 24"><path fill-rule="evenodd" d="M301 739C307.627 739 313 744.373 313 751C313 757.627 307.627 763 301 763C294.373 763 289 757.627 289 751C289 744.373 294.373 739 301 739ZM305.712 754.72C304.518 756.249 302.976 756.995 301 756.995C299.024 756.995 297.482 756.249 296.288 754.72C295.948 754.285 295.32 754.207 294.885 754.547C294.449 754.887 294.372 755.515 294.712 755.951C296.286 757.967 298.411 758.995 301 758.995C303.589 758.995 305.714 757.967 307.288 755.951C307.628 755.515 307.551 754.887 307.115 754.547C306.68 754.207 306.052 754.285 305.712 754.72ZM297 747C296.172 747 295.5 747.895 295.5 749C295.5 750.105 296.172 751 297 751C297.828 751 298.5 750.105 298.5 749C298.5 747.895 297.828 747 297 747ZM305 747C304.172 747 303.5 747.895 303.5 749C303.5 750.105 304.172 751 305 751C305.828 751 306.5 750.105 306.5 749C306.5 747.895 305.828 747 305 747Z"/></svg></div><svg class="like" viewBox="335 738 24 25"><path fill-rule="evenodd" d="M338.983 749.618C339.608 749.618 340.115 750.126 340.115 750.753V761.865C340.115 762.492 339.608 763 338.983 763H336.948C336.603 763 336.283 762.831 336.087 762.553L336.02 762.443C335.34 761.173 335 759.128 335 756.309C335 753.556 335.324 751.541 335.973 750.265L336.084 750.06C336.24 749.787 336.531 749.618 336.845 749.618H338.983ZM347.156 738.008C349.764 738.348 351.069 740.018 351.069 743.016C351.069 743.622 350.906 744.978 350.58 747.084C355.897 747.195 358.403 748.138 358.403 749.914C358.403 750.352 358.291 750.771 357.762 751.171C358.587 751.676 359 752.395 359 753.327C359 754.26 358.525 755.022 357.576 755.615C358.033 756.131 358.204 756.732 358.089 757.42C357.974 758.108 357.455 758.625 356.531 758.971C356.98 760.915 354.791 761.886 349.964 761.886C342.853 761.886 342.185 760.104 342.163 758.501L342.163 752.04C342.09 750.566 342.52 749.327 343.453 748.325L343.647 748.128C345.3 746.523 346.194 744.918 346.327 743.314L346.133 738.948C346.111 738.447 346.499 738.023 346.999 738.001C347.051 737.999 347.104 738.001 347.156 738.008Z"/></svg>
+    <button class="ig-tool ig-mic" type="button" aria-label="Clip âm thanh"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 10.671v.897a7.5 7.5 0 0 1-15 0v-.897" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><line x1="12" x2="12" y1="19.068" y2="22"/><line x1="8.706" x2="15.104" y1="22" y2="22"/><path d="M12 15.745a4 4 0 0 1-4-4V6a4 4 0 0 1 8 0v5.745a4 4 0 0 1-4 4Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg></button><button class="ig-tool ig-photo" type="button" aria-label="Thêm ảnh hoặc video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.549 5.013A1.557 1.557 0 1 0 8.106 6.57a1.557 1.557 0 0 0-1.557-1.557Z" fill-rule="evenodd"/><path d="m2 18.605 3.901-3.9a.908.908 0 0 1 1.284 0l2.807 2.806a.908.908 0 0 0 1.283 0l5.534-5.534a.908.908 0 0 1 1.283 0l3.905 3.905" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2"/><path d="M18.44 2.004A3.56 3.56 0 0 1 22 5.564v12.873a3.56 3.56 0 0 1-3.56 3.56H5.568a3.56 3.56 0 0 1-3.56-3.56V5.563a3.56 3.56 0 0 1 3.56-3.56Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg></button><button class="ig-sticker" type="button" aria-label="Sticker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.11 22H7.416A5.417 5.417 0 0 1 2 16.583V7.417A5.417 5.417 0 0 1 7.417 2h9.166A5.417 5.417 0 0 1 22 7.417v5.836a2.083 2.083 0 0 1-.626 1.488l-6.808 6.664A2.083 2.083 0 0 1 13.11 22Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><circle cx="8.238" cy="9.943" r="1.335"/><circle cx="15.762" cy="9.943" r="1.335"/><path d="M15.174 15.23a4.887 4.887 0 0 1-6.937-.301M22 10.833v1.629a1.25 1.25 0 0 1-1.25 1.25h-1.79a5.417 5.417 0 0 0-5.417 5.417v1.62a1.25 1.25 0 0 1-1.25 1.25H9.897" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg></button>
+  </footer>
+  <div class="homebar"></div>
+</main>
+</div>
+<script>
+  if (new URLSearchParams(location.search).get('embed') !== '1') {
+    const exportLibrary = document.createElement('script');
+    exportLibrary.src = 'https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.min.js';
+    document.head.append(exportLibrary);
+  }
+</script>
+<script>
+  // Figma exports paths in canvas coordinates. Normalizing them to a zero-based
+  // viewBox prevents html2canvas from clipping the left/right edges of the SVG.
+  const svgNormalizations = [
+    ['.cell-icon', 293.667, 17.6666, 17, 10.6667],
+    ['.wifi-icon', 315.693, 16.3208, 15.273, 11.9755],
+    ['.back', 19, 58, 13, 23],
+    ['.head-actions svg:first-child', 285, 57, 24, 24],
+    ['.head-actions svg:last-child', 332, 60, 27, 18],
+    ['.tool[aria-label="Camera"] svg', 58.5, 740, 25, 22],
+    ['.tool[aria-label="Ảnh"] svg', 104, 740, 22, 22],
+    ['.smile', 289, 739, 24, 24],
+    ['.like', 335, 738, 24, 25]
+  ];
+  svgNormalizations.forEach(([selector, x, y, width, height]) => {
+    const svg = document.querySelector(selector);
+    if (!svg) return;
+    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    svg.querySelectorAll('path').forEach(path => path.setAttribute('transform', `translate(${-x} ${-y})`));
+  });
+
+  const igHeaderActions = document.querySelector('.ig-header-actions');
+  if (igHeaderActions) {
+    igHeaderActions.innerHTML = `<svg aria-label="Gọi thoại" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="none" d="M18.227 22.912c-4.913 0-9.286-3.627-11.486-5.828C4.486 14.83.731 10.291.921 5.231a3.289 3.289 0 0 1 .908-2.138 17.116 17.116 0 0 1 1.865-1.71 2.307 2.307 0 0 1 3.004.174 13.283 13.283 0 0 1 3.658 5.325 2.551 2.551 0 0 1-.19 1.941l-.455.853a.463.463 0 0 0-.024.387 7.57 7.57 0 0 0 4.077 4.075.455.455 0 0 0 .386-.024l.853-.455a2.548 2.548 0 0 1 1.94-.19 13.278 13.278 0 0 1 5.326 3.658 2.309 2.309 0 0 1 .174 3.003 17.319 17.319 0 0 1-1.71 1.866 3.29 3.29 0 0 1-2.138.91 10.27 10.27 0 0 1-.368.006Zm-13.144-20a.27.27 0 0 0-.167.054A15.121 15.121 0 0 0 3.28 4.47a1.289 1.289 0 0 0-.36.836c-.161 4.301 3.21 8.34 5.235 10.364s6.06 5.403 10.366 5.236a1.284 1.284 0 0 0 .835-.36 15.217 15.217 0 0 0 1.504-1.637.324.324 0 0 0-.047-.41 11.62 11.62 0 0 0-4.457-3.119.545.545 0 0 0-.411.044l-.854.455a2.452 2.452 0 0 1-2.071.116 9.571 9.571 0 0 1-5.189-5.188 2.457 2.457 0 0 1 .115-2.071l.456-.855a.544.544 0 0 0 .043-.41 11.629 11.629 0 0 0-3.118-4.458.36.36 0 0 0-.244-.1Z"/></svg><svg aria-label="Gọi video" viewBox="0 0 24 24" aria-hidden="true"><rect fill="none" height="18" rx="3" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="16.999" x="1" y="3"/><path d="m17.999 9.146 2.495-2.256A1.5 1.5 0 0 1 23 8.003v7.994a1.5 1.5 0 0 1-2.506 1.113L18 14.854" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>`;
+  }
+  const generated = document.getElementById('generated-messages');
+  const chat = document.querySelector('.chat');
+  let messages = [];
+  const defaultAvatarUrl = 'avatar-facebook-mac-dinh-6.jpg';
+  let avatarDataUrl = defaultAvatarUrl;
+  const phone = document.querySelector('.phone');
+  const headAvatar = document.querySelector('.head-avatar');
+  const headAvatarWrap = document.createElement('span');
+  headAvatarWrap.className = 'head-avatar-wrap';
+  headAvatar.parentNode.insertBefore(headAvatarWrap, headAvatar);
+  headAvatarWrap.append(headAvatar);
+  const onlineIndicator = document.createElement('span');
+  onlineIndicator.className = 'online-indicator';
+  onlineIndicator.setAttribute('aria-hidden', 'true');
+  headAvatarWrap.append(onlineIndicator);
+  const defaultLikeIcon = document.querySelector('.like').cloneNode(true);
+  const battery = document.querySelector('.battery');
+  const batteryLevel = battery.querySelector('.battery-level');
+  const batteryChargeIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  batteryChargeIcon.classList.add('battery-charge-icon');
+  batteryChargeIcon.setAttribute('viewBox', '200 55 620 915');
+  batteryChargeIcon.setAttribute('aria-hidden', 'true');
+  const batteryChargePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  batteryChargePath.setAttribute('d', 'M434.897971 962.214818c-2.485611 0-4.357238-.661056-5.599532-1.871627-8.714476-2.52552-11.821233-7.463995-9.335622-14.935154l57.877175-341.637937H225.804792c-6.220678 0-10.577916-2.492774-13.071713-7.471159-3.727904-4.938476-3.106758-10.538007 1.871627-16.799618L602.920756 71.702042c4.978385-7.471159 10.577916-8.674567 16.799618-3.736091 6.220678 1.242294 9.335622 6.260587 9.335622 14.935154l-57.877175 341.646124H793.34269c6.220678 0 10.577916 2.52552 13.071713 7.463995 1.242294 4.978385 1.242294 10.577916 0 16.806781L447.969685 956.615287c-3.736091 3.727904-8.093329 5.599531-13.071714 5.599531z');
+  batteryChargeIcon.append(batteryChargePath);
+  battery.append(batteryChargeIcon);
+  const managerList = document.getElementById('manager-list');
+  let composerEditIndex = null;
+  let composerInsertIndex = null;
+  const composerContext = document.getElementById('composer-context');
+  const composerContextText = document.getElementById('composer-context-text');
+  const reactionComposer = document.getElementById('reaction-composer');
+  const reactionMessageInput = document.getElementById('reaction-message-input');
+  let reactionEditIndex = null;
+  const svgNamespace = 'http://www.w3.org/2000/svg';
+  const reactionMaskSvg = document.createElementNS(svgNamespace, 'svg');
+  const reactionMaskDefs = document.createElementNS(svgNamespace, 'defs');
+  reactionMaskSvg.setAttribute('width', '0');
+  reactionMaskSvg.setAttribute('height', '0');
+  reactionMaskSvg.setAttribute('aria-hidden', 'true');
+  reactionMaskSvg.style.position = 'absolute';
+  reactionMaskSvg.append(reactionMaskDefs);
+  phone.append(reactionMaskSvg);
+  const jsonInput = document.getElementById('conversation-json');
+  const jsonError = document.getElementById('json-error');
+  const embedMode = new URLSearchParams(location.search).get('embed') === '1';
+  let embedPayload = null;
+  if (embedMode) {
+    document.body.classList.add('embed-mode');
+    try { embedPayload = JSON.parse(decodeURIComponent(location.hash.slice(1))); } catch (_error) { embedPayload = null; }
+    if (embedPayload?.editable) document.body.classList.add('embed-editable');
+  }
+  const replyIcon = '<img class="json-reply-arrow" src="arrow_icons.png" alt="" aria-hidden="true">';
+  const sampleConversation = {
+    name: 'Tên người dùng',
+    activity: 'Hoạt động 2 giờ trước',
+    iphoneTime: '01:26',
+    conversation: [
+      {kind:'message', side:'right', content:'a thấy mmo giờ dễ đi quá', reaction:'😆'},
+      {kind:'message', side:'left', content:'kênh a dc mấy $ r thế :))'},
+      {kind:'message', side:'right', content:'rách vải cứt', reaction:'😆'},
+      {kind:'message', side:'right', content:'bật kiếm tiền xong nó tắt đề xuất'},
+      {kind:'message', side:'right', content:'a đ làm nữa'},
+      {kind:'message', side:'right', content:'bỏ kênh'},
+      {kind:'message', side:'right', content:'ai mua thì mua'},
+      {kind:'message', side:'right', content:'bực vãi'},
+      {kind:'between', content:'20:26, TH 5'},
+      {kind:'reply', side:'left', reply:'bật kiếm tiền xong nó tắt đề xuất', mess:'thấy vẫn có view mà', label:'Tên người dùng đã trả lời bạn'},
+      {kind:'message', side:'left', content:'nó thử kênh đấy'},
+      {kind:'message', side:'left', content:'làm tiếp đi a nổ view là bú'},
+      {kind:'message', side:'left', content:':)))'},
+      {kind:'between', content:'16:17'},
+      // Đối phương gọi đến: thoại/video, thành công và không thành công.
+      {kind:'call', side:'left', callType:'voice', state:'connected', duration:'16 giây'},
+      {kind:'call', side:'left', callType:'voice', state:'canceled', time:'21:52'},
+      {kind:'call', side:'left', callType:'video', state:'connected', duration:'28 giây'},
+      {kind:'call', side:'left', callType:'video', state:'canceled', time:'11:24'},
+      // Bên mình gọi đi: thoại/video, thành công và không thành công.
+      {kind:'call', side:'right', callType:'voice', state:'connected', duration:'11 giây'},
+      {kind:'call', side:'right', callType:'voice', state:'canceled', time:'4:18 CH'},
+      {kind:'call', side:'right', callType:'video', state:'connected', duration:'34 giây'},
+      {kind:'call', side:'right', callType:'video', state:'canceled', time:'4:21 CH'}
+    ]
+  };
+
+  document.getElementById('show-header').addEventListener('change', event => {
+    phone.classList.toggle('hide-header', !event.target.checked);
+  });
+  document.getElementById('show-footer').addEventListener('change', event => {
+    phone.classList.toggle('hide-footer', !event.target.checked);
+  });
+  document.getElementById('show-iphone-header').addEventListener('change', event => {
+    phone.classList.toggle('hide-iphone-header', !event.target.checked);
+  });
+  document.getElementById('show-iphone-footer').addEventListener('change', event => {
+    phone.classList.toggle('hide-iphone-footer', !event.target.checked);
+  });
+  const appStyleSelect = document.getElementById('app-style');
+  function applyAppStyle(value) {
+    const instagram = value === 'instagram';
+    phone.classList.toggle('instagram-style', instagram);
+    phone.setAttribute('aria-label', `Cuộc trò chuyện ${instagram ? 'Instagram' : 'Messenger'} với ${document.querySelector('.name').textContent || 'Tên người dùng'}`);
+  }
+  appStyleSelect.addEventListener('change', event => applyAppStyle(event.target.value));
+  appStyleSelect.addEventListener('change', updateReactionMasks);
+  const pinnedToggle = document.getElementById('show-pinned');
+  const pinnedFields = document.getElementById('pinned-fields');
+  const pinnedBanner = document.getElementById('pinned-banner');
+  const pinnedTitleInput = document.getElementById('pinned-title');
+  const pinnedDetailInput = document.getElementById('pinned-detail');
+  function updatePinned() {
+    const visible = pinnedToggle.checked;
+    phone.classList.toggle('has-pinned', visible);
+    pinnedBanner.hidden = !visible;
+    pinnedFields.hidden = !visible;
+    setDisplayText(pinnedBanner.querySelector('.pinned-title'), pinnedTitleInput.value || 'Tin nhắn đã ghim');
+    setDisplayText(pinnedBanner.querySelector('.pinned-detail'), pinnedDetailInput.value || 'Chạm để xem tin nhắn');
+  }
+  pinnedToggle.addEventListener('change', updatePinned);
+  [pinnedTitleInput, pinnedDetailInput].forEach(input => input.addEventListener('input', updatePinned));
+
+  const reactionControlIds = [
+    'reaction-width',
+    'reaction-height',
+    'reaction-font-size',
+    'reaction-right',
+    'reaction-bottom',
+    'reaction-cutout-extra'
+  ];
+  function formatDisplayText(value) {
+    // Keep an emoji attached to the word before it. html-to-image otherwise can
+    // measure color emoji differently and put it alone on the next line.
+    return String(value ?? '').replace(/\s+(?=\p{Extended_Pictographic})/gu, '\u00a0');
+  }
+
+  function setDisplayText(element, value) {
+    element.textContent = formatDisplayText(value);
+  }
+
+  function setReactionGlyph(reaction, value) {
+    const glyph = document.createElement('span');
+    glyph.className = 'reaction-glyph';
+    setDisplayText(glyph, value);
+    reaction.replaceChildren(glyph);
+  }
+
+  function emojiWidthReserve(value) {
+    return (String(value ?? '').match(/\p{Extended_Pictographic}/gu) || []).length * 4;
+  }
+
+  function fitMessageBubbles() {
+    const widthLimit = 270;
+    generated.querySelectorAll('.bubble:not(.voice-bubble)').forEach(bubble => {
+      bubble.style.width = 'max-content';
+      const emojiReserve = emojiWidthReserve(bubble.textContent);
+      const naturalWidth = Math.ceil(bubble.getBoundingClientRect().width) + emojiReserve;
+      if (naturalWidth <= widthLimit) {
+        bubble.style.width = `${naturalWidth}px`;
+        return;
+      }
+
+      bubble.style.width = `${widthLimit}px`;
+      const range = document.createRange();
+      range.selectNodeContents(bubble);
+      const lineWidths = [...range.getClientRects()].map(rect => rect.width);
+      const style = getComputedStyle(bubble);
+      const horizontalPadding = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+      const longestLine = lineWidths.length ? Math.max(...lineWidths) : widthLimit - horizontalPadding;
+      bubble.style.width = `${Math.min(widthLimit, Math.ceil(longestLine + horizontalPadding + emojiReserve + 1))}px`;
+      range.detach();
+    });
+  }
+  function updateReactionMasks() {
+    const width = Number(document.getElementById('reaction-width').value);
+    const height = Number(document.getElementById('reaction-height').value);
+    const right = Number(document.getElementById('reaction-right').value);
+    const bottom = Number(document.getElementById('reaction-bottom').value);
+    const extra = Number(document.getElementById('reaction-cutout-extra').value);
+    generated.querySelectorAll('.has-reaction-cutout').forEach(bubble => {
+      const bubbleWidth = bubble.getBoundingClientRect().width;
+      const bubbleHeight = bubble.getBoundingClientRect().height;
+      const cutoutWidth = width + extra;
+      const cutoutHeight = height + extra;
+      const x = phone.classList.contains('instagram-style') ? 10 - extra / 2 : bubbleWidth - right - width - extra / 2;
+      const y = bubbleHeight - bottom - height - extra / 2;
+      const radius = cutoutHeight / 2;
+      const roundedCutout = [
+        `M${x + radius} ${y}`,
+        `H${x + cutoutWidth - radius}`,
+        `A${radius} ${radius} 0 0 1 ${x + cutoutWidth} ${y + radius}`,
+        `V${y + cutoutHeight - radius}`,
+        `A${radius} ${radius} 0 0 1 ${x + cutoutWidth - radius} ${y + cutoutHeight}`,
+        `H${x + radius}`,
+        `A${radius} ${radius} 0 0 1 ${x} ${y + cutoutHeight - radius}`,
+        `V${y + radius}`,
+        `A${radius} ${radius} 0 0 1 ${x + radius} ${y}`,
+        'Z'
+      ].join(' ');
+      const svgMask = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${bubbleWidth} ${bubbleHeight}"><path fill="white" fill-rule="evenodd" d="M0 0H${bubbleWidth}V${bubbleHeight}H0Z ${roundedCutout}"/></svg>`;
+      const maskUrl = `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgMask)}")`;
+      bubble.style.webkitMaskImage = maskUrl;
+      bubble.style.maskImage = maskUrl;
+      bubble.style.webkitMaskSize = '100% 100%';
+      bubble.style.maskSize = '100% 100%';
+      bubble.style.webkitMaskRepeat = 'no-repeat';
+      bubble.style.maskRepeat = 'no-repeat';
+    });
+  }
+  reactionControlIds.forEach(id => {
+    const input = document.getElementById(id);
+    const output = input.nextElementSibling;
+    const updateReactionControl = () => {
+      phone.style.setProperty(`--${id}`, `${input.value}px`);
+      output.value = `${input.value}px`;
+      updateReactionMasks();
+    };
+    input.addEventListener('input', updateReactionControl);
+    updateReactionControl();
+  });
+
+  function applyMessengerTheme(theme) {
+    const olivia = theme === 'olivia';
+    phone.classList.toggle('mess-theme-olivia', olivia);
+    const plusPath = phone.querySelector('.plus svg path');
+    if (plusPath) {
+      plusPath.setAttribute('stroke', olivia ? '#9AB87A' : '#fff');
+      plusPath.style.stroke = olivia ? '#9AB87A' : '#fff';
+    }
+    if (olivia) {
+      phone.classList.remove('themed-background');
+      phone.style.backgroundImage = '';
+      phone.style.backgroundPosition = '';
+      phone.style.backgroundSize = '';
+      phone.style.backgroundRepeat = '';
+    }
+  }
+  document.getElementById('messenger-theme').addEventListener('change', event => {
+    applyMessengerTheme(event.target.value);
+  });
+
+  function applyAvatar(element) {
+    if (!element) return;
+    element.classList.toggle('has-image', Boolean(avatarDataUrl));
+    element.style.backgroundImage = avatarDataUrl ? `url("${avatarDataUrl}")` : '';
+  }
+
+  function refreshAvatars() {
+    document.querySelectorAll('.avatar').forEach(applyAvatar);
+  }
+  refreshAvatars();
+
+  document.getElementById('profile-avatar').addEventListener('change', event => {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+      avatarDataUrl = reader.result;
+      refreshAvatars();
+    });
+    reader.readAsDataURL(file);
+  });
+  document.getElementById('chat-background-color').addEventListener('input', event => {
+    phone.style.setProperty('--chat-bg', event.target.value);
+  });
+  document.getElementById('chat-background-image').addEventListener('change', event => {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+      phone.style.backgroundImage = `url("${reader.result}")`;
+      phone.style.backgroundPosition = 'center';
+      phone.style.backgroundSize = 'cover';
+      phone.style.backgroundRepeat = 'no-repeat';
+      phone.classList.add('themed-background');
+    });
+    reader.readAsDataURL(file);
+  });
+  function updateThemeOverlay() {
+    const hex = document.getElementById('theme-tint').value;
+    const strength = Number(document.getElementById('theme-strength').value) / 100;
+    const red = parseInt(hex.slice(1, 3), 16);
+    const green = parseInt(hex.slice(3, 5), 16);
+    const blue = parseInt(hex.slice(5, 7), 16);
+    phone.style.setProperty('--theme-overlay', `rgba(${red},${green},${blue},${strength})`);
+    phone.style.setProperty('--composer-theme', `rgba(${red},${green},${blue},.55)`);
+  }
+  document.getElementById('theme-tint').addEventListener('input', updateThemeOverlay);
+  document.getElementById('theme-strength').addEventListener('input', updateThemeOverlay);
+  document.getElementById('footer-icon').addEventListener('change', event => {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+      const currentIcon = document.querySelector('.like');
+      const customIcon = document.createElement('img');
+      customIcon.className = 'like';
+      customIcon.alt = '';
+      customIcon.src = reader.result;
+      currentIcon.replaceWith(customIcon);
+    });
+    reader.readAsDataURL(file);
+  });
+  document.getElementById('footer-emoji').addEventListener('input', event => {
+    const value = event.target.value.trim();
+    if (!value) return;
+    const currentIcon = document.querySelector('.like');
+    const customEmoji = document.createElement('span');
+    customEmoji.className = 'like like-emoji';
+    customEmoji.setAttribute('aria-hidden', 'true');
+    customEmoji.textContent = value;
+    currentIcon.replaceWith(customEmoji);
+  });
+
+  const iconPickerModal = document.getElementById('icon-picker-modal');
+  const iconPickerGrid = document.getElementById('icon-picker-grid');
+  const iconPickerSearch = document.getElementById('icon-picker-search');
+  let iconPickerTarget = 'footer';
+  const iconPresets = [
+    ['👍','Like'],['❤️','Love'],['🥰','Care'],['😂','Haha'],['😮','Wow'],['😢','Sad'],['😡','Angry'],
+    ['🔥','Fire'],['🎉','Celebrate'],['💯','One hundred'],['👏','Clap'],['🙏','Thank you'],['💪','Strong'],['🤝','Handshake'],
+    ['👌','OK'],['✌️','Peace'],['🤣','Laughing'],['😆','Grinning'],['😊','Smile'],['😉','Wink'],['😍','Heart eyes'],
+    ['😘','Kiss'],['🤔','Thinking'],['🙄','Eye roll'],['😎','Cool'],['🤯','Mind blown'],['🥳','Party'],['😭','Crying'],
+    ['💔','Broken heart'],['✅','Done'],['⭐','Star'],['⚡','Lightning'],['💖','Sparkling heart'],['🤍','White heart'],['🫶','Heart hands'],
+    ['👎','Dislike'],['🖤','Black heart'],['💙','Blue heart'],['💚','Green heart'],['💛','Yellow heart'],['💜','Purple heart'],['🩷','Pink heart'],
+    ['🧡','Orange heart'],['🩵','Light blue heart'],['🩶','Grey heart'],['🤎','Brown heart'],['❣️','Heart exclamation'],['💕','Two hearts'],['💞','Revolving hearts'],
+    ['💓','Beating heart'],['💗','Growing heart'],['💘','Heart arrow'],['💝','Gift heart'],['❤️‍🔥','Heart fire'],['❤️‍🩹','Mending heart'],['💟','Heart decoration'],
+    ['😀','Grin'],['😃','Happy'],['😄','Smile'],['😁','Beaming'],['😅','Sweat smile'],['😇','Angel'],['🙂','Slight smile'],['🙃','Upside down'],
+    ['😋','Yum'],['😛','Tongue'],['😜','Silly'],['🤪','Zany'],['😝','Squint tongue'],['🫠','Melting'],['🫡','Salute'],['🤗','Hug'],
+    ['🤭','Giggle'],['🫢','Surprise hand'],['🤫','Quiet'],['🤥','Liar'],['😶','No mouth'],['😐','Neutral'],['😑','Expressionless'],['🫤','Diagonal mouth'],
+    ['😒','Unamused'],['😬','Grimace'],['😮‍💨','Exhale'],['😔','Pensive'],['😪','Sleepy'],['🤤','Drool'],['😴','Sleep'],['😷','Mask'],
+    ['🤒','Sick'],['🤕','Hurt'],['🤢','Nausea'],['🤮','Vomit'],['🤧','Sneeze'],['🥵','Hot'],['🥶','Cold'],['😵','Dizzy'],
+    ['🤠','Cowboy'],['🥸','Disguise'],['😈','Devil'],['👿','Angry devil'],['👻','Ghost'],['💀','Skull'],['🤖','Robot'],['🎃','Pumpkin'],
+    ['👋','Wave'],['🤚','Raised hand'],['🖐️','Hand'],['✋','Stop'],['🖖','Vulcan'],['🫶','Heart hands'],['🤟','Love you'],['🤘','Rock'],
+    ['👊','Fist'],['✊','Raised fist'],['🤛','Left fist'],['🤜','Right fist'],['🫰','Finger heart'],['🤲','Palms up'],['🙌','Raised hands'],['🫂','Hug people'],
+    ['🎈','Balloon'],['🎁','Gift'],['🎂','Birthday'],['🍰','Cake'],['🍻','Cheers'],['☕','Coffee'],['🌹','Rose'],['🌷','Tulip'],
+    ['🌸','Blossom'],['🌈','Rainbow'],['☀️','Sun'],['🌙','Moon'],['✨','Sparkles'],['💫','Dizzy star'],['🎵','Music'],['🎶','Notes'],
+    ['📷','Camera'],['🎥','Video'],['📞','Phone'],['💬','Message'],['📌','Pin'],['📍','Location'],['🔗','Link'],['🎮','Game'],
+    ['🚀','Rocket'],['✈️','Plane'],['🏆','Trophy'],['🎯','Target'],['💡','Idea'],['👀','Eyes'],['💯','Perfect'],['♻️','Recycle']
+  ];
+
+  function closeIconPicker() {
+    iconPickerModal.hidden = true;
+  }
+
+  function openIconPicker(target) {
+    iconPickerTarget = target;
+    const currentValue = target === 'reaction' ? reactionMessageInput.value.trim() : document.getElementById('footer-emoji').value.trim();
+    document.getElementById('icon-picker-title').textContent = target === 'reaction' ? 'Chọn reaction' : 'Chọn icon';
+    iconPickerSearch.value = '';
+    iconPickerGrid.querySelectorAll('.icon-choice').forEach(choice => {
+      choice.hidden = false;
+      choice.setAttribute('aria-pressed', String(choice.textContent === currentValue));
+    });
+    iconPickerModal.hidden = false;
+    requestAnimationFrame(() => iconPickerSearch.focus());
+  }
+
+  function resetFooterIcon() {
+    const currentIcon = document.querySelector('.like');
+    currentIcon.replaceWith(defaultLikeIcon.cloneNode(true));
+    document.getElementById('footer-emoji').value = '';
+    iconPickerGrid.querySelectorAll('.icon-choice').forEach(choice => choice.setAttribute('aria-pressed', 'false'));
+  }
+
+  iconPresets.forEach(([icon, label]) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'icon-choice';
+    button.textContent = icon;
+    button.title = label;
+    button.dataset.search = `${icon} ${label}`.toLocaleLowerCase();
+    button.setAttribute('aria-label', label);
+    button.setAttribute('aria-pressed', 'false');
+    button.addEventListener('click', () => {
+      if (iconPickerTarget === 'reaction') {
+        reactionMessageInput.value = icon;
+        applyMessageReaction();
+      } else {
+        const footerEmoji = document.getElementById('footer-emoji');
+        footerEmoji.value = icon;
+        footerEmoji.dispatchEvent(new Event('input', {bubbles:true}));
+      }
+      closeIconPicker();
+    });
+    iconPickerGrid.append(button);
+  });
+
+  iconPickerSearch.addEventListener('input', () => {
+    const query = iconPickerSearch.value.trim().toLocaleLowerCase();
+    iconPickerGrid.querySelectorAll('.icon-choice').forEach(choice => {
+      choice.hidden = Boolean(query) && !choice.dataset.search.includes(query);
+    });
+  });
+
+  document.getElementById('open-icon-picker').addEventListener('click', () => {
+    openIconPicker('footer');
+  });
+  document.getElementById('open-reaction-picker').addEventListener('click', () => openIconPicker('reaction'));
+  document.getElementById('reset-footer-icon').addEventListener('click', resetFooterIcon);
+  document.getElementById('close-icon-picker').addEventListener('click', closeIconPicker);
+  iconPickerModal.addEventListener('click', event => {
+    if (event.target === iconPickerModal) closeIconPicker();
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !iconPickerModal.hidden) closeIconPicker();
+  });
+  const profileNameInput = document.getElementById('profile-name');
+  function getReplyLabel(side) {
+    const name = profileNameInput.value.trim() || 'Tên người dùng';
+    return side === 'theirs' ? `${name} đã trả lời bạn` : `Bạn đã trả lời ${name}`;
+  }
+  function syncReplyLabelInputs(force = false) {
+    document.querySelectorAll('.builder-form[data-side]').forEach(form => {
+      const input = form.querySelector('[data-reply-label]');
+      const nextDefault = getReplyLabel(form.dataset.side);
+      if (force || !input.value || input.value === input.dataset.defaultValue) input.value = nextDefault;
+      input.dataset.defaultValue = nextDefault;
+    });
+  }
+  syncReplyLabelInputs(true);
+  profileNameInput.addEventListener('input', event => {
+    setDisplayText(document.querySelector('.name'), event.target.value || ' ');
+    syncReplyLabelInputs();
+  });
+  const profileActivityInput = document.getElementById('profile-activity');
+  const profileOnlineInput = document.getElementById('profile-online');
+  let inactiveActivityText = profileActivityInput.value;
+  profileActivityInput.addEventListener('input', event => {
+    setDisplayText(document.querySelector('.presence'), event.target.value || ' ');
+    if (!profileOnlineInput.checked) inactiveActivityText = event.target.value;
+  });
+  profileOnlineInput.addEventListener('change', () => {
+    if (profileOnlineInput.checked) {
+      inactiveActivityText = profileActivityInput.value || inactiveActivityText;
+      profileActivityInput.value = 'Đang hoạt động';
+    } else {
+      profileActivityInput.value = inactiveActivityText || 'Hoạt động 2 giờ trước';
+    }
+    headAvatarWrap.classList.toggle('is-online', profileOnlineInput.checked);
+    profileActivityInput.dispatchEvent(new Event('input', {bubbles:true}));
+  });
+  document.getElementById('iphone-time').addEventListener('input', event => {
+    setDisplayText(document.querySelector('.clock'), event.target.value || ' ');
+  });
+
+  const batteryColors = {saving:'#f7ce45', normal:'#41C560', low:'#F33A35'};
+  function updateBattery(commitValue = false) {
+    const percentInput = document.getElementById('battery-percent');
+    const rawPercent = Number(percentInput.value);
+    if (!Number.isFinite(rawPercent) || percentInput.value === '') return;
+    const percent = Math.min(100, Math.max(1, Math.round(rawPercent)));
+    const state = document.getElementById('battery-state').value;
+    const charging = document.getElementById('battery-charging').value === 'yes';
+    if (commitValue) percentInput.value = percent;
+    battery.style.setProperty('--level', percent);
+    battery.style.setProperty('--battery-color', batteryColors[state]);
+    battery.dataset.state = state;
+    battery.classList.toggle('is-charging', charging);
+    batteryLevel.textContent = percent;
+  }
+  document.getElementById('battery-percent').addEventListener('input', () => updateBattery());
+  document.getElementById('battery-percent').addEventListener('change', () => updateBattery(true));
+  document.getElementById('battery-state').addEventListener('change', () => updateBattery());
+  document.getElementById('battery-charging').addEventListener('change', () => updateBattery());
+  updateBattery(true);
+
+  function enterBuilderMode() {
+    chat.classList.add('building');
+    generated.hidden = false;
+  }
+
+  function normalizedSide(side) {
+    return side === 'left' || side === 'theirs' ? 'theirs' : 'mine';
+  }
+
+  function isBubble(item) {
+    return item && ['message', 'mess', 'reply', 'messreply', 'call', 'voice'].includes(item.kind);
+  }
+
+  function canJoinBubble(item, side) {
+    return isBubble(item) && !item.reaction && normalizedSide(item.side) === side;
+  }
+
+  const outgoingVoiceCallIcon = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.776 1.112a1.728 1.728 0 0 0-2.56-.127l-.472.472a4.516 4.516 0 0 0-.739 5.415 21.46 21.46 0 0 0 8.123 8.123 4.516 4.516 0 0 0 5.415-.738l.456-.455a1.75 1.75 0 0 0-.13-2.592l-2.131-1.745a1.75 1.75 0 0 0-2.143-.057L9.22 10.417a.052.052 0 0 1-.06.002 12.077 12.077 0 0 1-3.578-3.58.052.052 0 0 1 .002-.058l1.008-1.375a1.75 1.75 0 0 0-.056-2.143l-1.76-2.15zM10.22 5.78a.75.75 0 0 1 0-1.06l2.218-2.22h-1.187a.75.75 0 0 1 0-1.5h2.499c.69 0 1.25.56 1.25 1.25v2.5a.75.75 0 0 1-1.5 0V3.56l-2.22 2.22a.75.75 0 0 1-1.06 0z"></path></svg>';
+  const incomingVoiceCallIcon = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.776 1.112a1.728 1.728 0 0 0-2.56-.127l-.472.472a4.516 4.516 0 0 0-.739 5.415 21.46 21.46 0 0 0 8.123 8.123 4.516 4.516 0 0 0 5.415-.738l.456-.455a1.75 1.75 0 0 0-.13-2.592l-2.131-1.745a1.75 1.75 0 0 0-2.143-.057L9.22 10.417a.052.052 0 0 1-.06.002 12.077 12.077 0 0 1-3.578-3.58.052.052 0 0 1 .002-.058l1.008-1.375a1.75 1.75 0 0 0-.056-2.143l-1.76-2.15zm10.004.108a.75.75 0 0 1 0 1.06L12.563 4.5h1.187a.75.75 0 0 1 0 1.5h-2.5C10.56 6 10 5.44 10 4.75v-2.5a.75.75 0 0 1 1.5 0v1.19l2.22-2.22a.75.75 0 0 1 1.06 0z"></path></svg>';
+  const missedVoiceCallIcon = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.776 1.111a1.728 1.728 0 0 0-2.56-.127l-.472.472a4.516 4.516 0 0 0-.738 5.415 21.46 21.46 0 0 0 8.123 8.123 4.516 4.516 0 0 0 5.415-.738l.455-.456a1.75 1.75 0 0 0-.129-2.591l-2.132-1.745a1.75 1.75 0 0 0-2.143-.056L9.22 10.416a.052.052 0 0 1-.059.002 12.077 12.077 0 0 1-3.579-3.58.052.052 0 0 1 .002-.058l1.009-1.375a1.75 1.75 0 0 0-.057-2.143l-1.76-2.15zm10.004.109a.75.75 0 0 1 0 1.06L13.56 3.5l1.22 1.22a.75.75 0 0 1-1.061 1.06L12.5 4.56l-1.22 1.221a.75.75 0 0 1-1.06-1.06L11.44 3.5l-1.22-1.22a.75.75 0 1 1 1.06-1.06l1.22 1.22 1.22-1.22a.75.75 0 0 1 1.06 0z"></path></svg>';
+  const incomingVideoCallIcon = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.304 2h-.108c-1.132 0-2.058 0-2.79.098-.763.103-1.425.325-1.954.854C.923 3.48.7 4.142.598 4.907.5 5.637.5 6.563.5 7.697v.607c0 1.133 0 2.058.098 2.79.103.763.325 1.425.854 1.954.529.529 1.19.751 1.955.854.73.098 1.656.098 2.79.098h.107c1.133 0 2.058 0 2.79-.098.763-.103 1.425-.325 1.954-.854.529-.529.751-1.19.854-1.955.038-.286.062-.602.076-.95l1.93 1.418a1 1 0 0 0 1.592-.805V5.227a1 1 0 0 0-1.57-.821l-1.956 1.357a9.974 9.974 0 0 0-.072-.856c-.103-.764-.325-1.426-.854-1.955-.529-.529-1.19-.751-1.955-.854C8.363 2 7.437 2 6.303 2zM4.75 8.44l2.72-2.72a.75.75 0 1 1 1.06 1.06L5.81 9.5H7A.75.75 0 0 1 7 11H4.5c-.69 0-1.25-.56-1.25-1.25v-2.5a.75.75 0 0 1 1.5 0v1.19z"></path></svg>';
+  const missedVideoCallIcon = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.304 2h-.108c-1.132 0-2.058 0-2.79.098-.763.103-1.425.325-1.954.854C.923 3.48.7 4.142.598 4.907.5 5.637.5 6.563.5 7.697v.607c0 1.133 0 2.058.098 2.79.103.763.325 1.425.854 1.954.529.529 1.19.751 1.955.854.73.098 1.656.098 2.79.098h.107c1.133 0 2.058 0 2.79-.098.763-.103 1.425-.325 1.954-.854.529-.529.751-1.19.854-1.955.038-.286.062-.602.076-.949l1.93 1.418a1 1 0 0 0 1.592-.806V5.228a1 1 0 0 0-1.57-.822l-1.956 1.357a9.984 9.984 0 0 0-.072-.856c-.103-.764-.325-1.426-.854-1.955-.529-.529-1.19-.751-1.955-.854C8.363 2 7.437 2 6.303 2zM8.53 5.72a.75.75 0 0 1 0 1.06L7.31 8l1.22 1.22a.75.75 0 0 1-1.06 1.06L6.25 9.06l-1.22 1.22a.75.75 0 1 1-1.06-1.06L5.19 8 3.97 6.78a.75.75 0 0 1 1.06-1.06l1.22 1.22 1.22-1.22a.75.75 0 0 1 1.06 0z"></path></svg>';
+
+  const voiceWaveHeights = [23,8,17,34,23,46,46,34,11,17,34,46,46,23,34,46,34,34,23,11,11,17,23,46,34,23];
+
+  function createCallRow(message, index) {
+    const side = normalizedSide(message.side);
+    const position = groupPosition(index);
+    const joined = !message.reaction && canJoinBubble(messages[index - 1], side);
+    const callType = message.callType === 'video' ? 'video' : 'voice';
+    const state = ['connected', 'canceled', 'missed'].includes(message.state) ? message.state : 'connected';
+    const row = document.createElement('div');
+    row.className = `call-row ${side} ${position}${joined ? ' joined' : ''}${message.reaction ? ' has-reaction' : ''}`;
+    if (side === 'theirs') {
+      const avatarSlot = document.createElement('span');
+      avatarSlot.className = 'call-avatar-slot';
+      if (position === 'end' || position === 'solo') {
+        const avatar = document.createElement('span');
+        avatar.className = 'avatar';
+        applyAvatar(avatar);
+        avatarSlot.append(avatar);
+      }
+      row.append(avatarSlot);
+    }
+    const card = document.createElement('article');
+    card.className = `call-card ${callType} ${state}${message.reaction ? ' has-reaction-cutout' : ''}`;
+    const callLabel = callType === 'video' ? 'cuộc gọi video' : 'cuộc gọi thoại';
+    const title = state === 'canceled' || state === 'missed' ? `Đã nhỡ ${callLabel}` : callType === 'video' ? 'Cuộc gọi video' : 'Cuộc gọi thoại';
+    const status = state === 'connected' ? (message.duration || 'Đã kết nối') : (message.time || 'Vừa xong');
+    const head = document.createElement('div');
+    head.className = 'call-card-head';
+    const icon = document.createElement('span');
+    icon.className = 'call-card-icon';
+    icon.innerHTML = callType === 'video'
+      ? (state === 'canceled' || state === 'missed' ? missedVideoCallIcon : incomingVideoCallIcon)
+      : state === 'canceled' || state === 'missed'
+        ? missedVoiceCallIcon
+        : side === 'theirs' ? incomingVoiceCallIcon : outgoingVoiceCallIcon;
+    const copy = document.createElement('div');
+    copy.className = 'call-card-copy';
+    const titleEl = document.createElement('div');
+    titleEl.className = 'call-card-title';
+    setDisplayText(titleEl, title);
+    const statusEl = document.createElement('div');
+    statusEl.className = 'call-card-status';
+    setDisplayText(statusEl, status);
+    const action = document.createElement('button');
+    action.className = 'call-card-action';
+    action.type = 'button';
+    action.textContent = 'Gọi lại';
+    copy.append(titleEl, statusEl);
+    head.append(icon, copy);
+    card.append(head, action);
+    const content = document.createElement('div');
+    content.className = 'embed-content call-content';
+    content.append(card);
+    if (message.reaction) {
+      const reaction = document.createElement('span');
+      reaction.className = 'message-reaction';
+      setReactionGlyph(reaction, message.reaction);
+      content.append(reaction);
+    }
+    row.append(content);
+    return row;
+  }
+
+  function groupPosition(index) {
+    const current = messages[index];
+    const before = messages[index - 1];
+    const after = messages[index + 1];
+    const side = normalizedSide(current.side);
+    // A reply starts a fresh cluster but may continue with the following bubble.
+    const isReply = current.kind === 'reply' || current.kind === 'messreply';
+    const sameBefore = !isReply && !current.reaction && canJoinBubble(before, side);
+    const sameAfter = !current.reaction && canJoinBubble(after, side);
+    if (sameBefore && sameAfter) return 'middle';
+    if (sameAfter) return 'start';
+    if (sameBefore) return 'end';
+    return 'solo';
+  }
+
+  function createVoiceRow(message, index) {
+    const side = normalizedSide(message.side);
+    const position = groupPosition(index);
+    const joined = !message.reaction && canJoinBubble(messages[index - 1], side);
+    const row = document.createElement('div');
+    row.className = `row voice-row ${side} ${position}${joined ? ' joined' : ''}${message.reaction ? ' has-reaction' : ''}`;
+
+    if (side === 'theirs') {
+      const slot = document.createElement('span');
+      slot.className = 'avatar-slot';
+      if (position === 'end' || position === 'solo') {
+        const avatar = document.createElement('span');
+        avatar.className = 'avatar';
+        applyAvatar(avatar);
+        slot.append(avatar);
+      }
+      row.append(slot);
+    }
+
+    const content = document.createElement('div');
+    content.className = 'embed-content';
+    const bubble = document.createElement('div');
+    bubble.className = `bubble voice-bubble${message.reaction ? ' has-reaction-cutout' : ''}`;
+    const play = document.createElement('button');
+    play.type = 'button';
+    play.className = 'voice-play';
+    play.setAttribute('aria-label', 'Phát tin nhắn thoại');
+    const playColor = side === 'mine' ? '#fff' : '#050505';
+    play.innerHTML = `<svg aria-hidden="true" height="24px" viewBox="0 0 36 36" width="24px"><path d="M10 25.5v-15a1.5 1.5 0 0 1 2.17-1.34l15 7.5a1.5 1.5 0 0 1 0 2.68l-15 7.5A1.5 1.5 0 0 1 10 25.5z" fill="${playColor}"></path></svg>`;
+    const bars = document.createElement('span');
+    bars.className = 'voice-bars';
+    voiceWaveHeights.forEach(height => {
+      const bar = document.createElement('i');
+      bar.style.setProperty('--bar-height', `${height}px`);
+      bars.append(bar);
+    });
+    const duration = document.createElement('span');
+    duration.className = 'voice-duration';
+    setDisplayText(duration, message.duration || '0:04');
+    bubble.append(play, bars, duration);
+    content.append(bubble);
+    if (message.reaction) {
+      const reaction = document.createElement('span');
+      reaction.className = 'message-reaction';
+      setReactionGlyph(reaction, message.reaction);
+      content.append(reaction);
+    }
+    row.append(content);
+    return row;
+  }
+
+  function createMessageRow(message, index) {
+      const side = normalizedSide(message.side);
+      const position = groupPosition(index);
+      const row = document.createElement('div');
+      const joined = !message.reaction && canJoinBubble(messages[index - 1], side);
+      row.className = `row ${side} ${position}${joined ? ' joined' : ''}${message.reaction ? ' has-reaction' : ''}`;
+
+      if (side === 'theirs') {
+        const slot = document.createElement('span');
+        slot.className = 'avatar-slot';
+        if (position === 'end' || position === 'solo') {
+          const avatar = document.createElement('span');
+          avatar.className = 'avatar';
+          applyAvatar(avatar);
+          slot.append(avatar);
+        }
+        row.append(slot);
+      }
+
+      const content = document.createElement('div');
+      content.className = 'embed-content';
+      const text = message.content ?? message.mess ?? message.text ?? '';
+      if (text) {
+        const bubble = document.createElement('div');
+        bubble.className = `bubble${message.reaction && !message.imageUrl ? ' has-reaction-cutout' : ''}`;
+        bubble.textContent = formatDisplayText(text);
+        content.append(bubble);
+      }
+      if (message.imageUrl) {
+        const imageWrap = document.createElement('div');
+        imageWrap.className = 'chat-image-wrap';
+        const image = document.createElement('img');
+        image.className = `chat-image${message.imageType === 'sticker' ? ' is-sticker' : ''}${message.reaction ? ' has-reaction-cutout' : ''}`;
+        image.src = message.imageUrl;
+        image.referrerPolicy = 'no-referrer';
+        image.addEventListener('load', updateReactionMasks, {once:true});
+        const share = document.createElement('span');
+        share.className = 'image-share';
+        share.setAttribute('aria-hidden', 'true');
+        const shareIcon = document.createElement('img');
+        shareIcon.src = 'arrow_icons.png';
+        shareIcon.alt = '';
+        shareIcon.draggable = false;
+        share.append(shareIcon);
+        imageWrap.append(image, share);
+        content.append(imageWrap);
+      }
+      row.append(content);
+      if (message.reaction) {
+        const reaction = document.createElement('span');
+        reaction.className = 'message-reaction';
+      setReactionGlyph(reaction, message.reaction);
+        content.append(reaction);
+      }
+      if (embedPayload?.editable) {
+        const insert = document.createElement('button');
+        insert.type = 'button'; insert.className = 'embed-insert'; insert.textContent = '＋ Chèn';
+        insert.addEventListener('click', event => { event.stopPropagation(); parent.postMessage({source:'messenger-pixel',action:'insert',index,stepId:embedPayload.stepId}, '*'); });
+        const actions = document.createElement('span'); actions.className = 'embed-actions';
+        [['edit','✎'],['audio','🔊'],['delete','×']].forEach(([action,label]) => {
+          const button = document.createElement('button'); button.type='button'; button.textContent=label;
+          button.addEventListener('click', event => { event.stopPropagation(); parent.postMessage({source:'messenger-pixel',action,index,stepId:embedPayload.stepId}, '*'); });
+          actions.append(button);
+        });
+        row.append(insert, actions);
+      }
+      return row;
+  }
+
+  function getManagerKind(message) {
+    if (message.kind === 'reply' || message.kind === 'messreply') return 'reply';
+    if (message.kind === 'voice') return 'voice';
+    if (message.kind === 'call') return 'call';
+    if (message.kind === 'between' || message.kind === 'betweenText' || message.kind === 'text-between' || message.kind === 'time') return 'between';
+    if (message.imageUrl) return 'image';
+    return 'message';
+  }
+
+  function managerSummary(message) {
+    const kind = getManagerKind(message);
+    if (kind === 'image') return message.content ? `Ảnh · ${message.content}` : 'Ảnh';
+    if (kind === 'call') {
+      const callType = message.callType === 'video' ? 'video' : 'thoại';
+      const state = message.state === 'connected' ? 'đã kết nối' : 'cuộc gọi nhỡ';
+      return `Gọi ${callType} · ${state}`;
+    }
+    if (kind === 'voice') return `Voice · ${message.duration || '0:04'}`;
+    if (kind === 'reply') return message.mess || message.content || 'Tin nhắn trả lời';
+    if (kind === 'between') return message.content || message.text || 'Mốc thời gian';
+    return message.content || message.mess || message.text || 'Tin nhắn';
+  }
+
+  function clearComposerContext() {
+    composerEditIndex = null;
+    composerInsertIndex = null;
+    composerContext.hidden = true;
+    reactionEditIndex = null;
+    reactionComposer.hidden = true;
+  }
+
+  function showComposerContext(text) {
+    composerContextText.textContent = text;
+    composerContext.hidden = false;
+  }
+
+  function activateComposerKind(form, kind) {
+    form.dataset.kind = kind;
+    const selectedCallType = form.querySelector('[data-call-type]')?.value;
+    form.querySelectorAll('.message-type-tabs button').forEach(item => {
+      const selected = item.dataset.kind === kind && (kind !== 'call' || item.dataset.callTypeChoice === selectedCallType);
+      item.setAttribute('aria-selected', String(selected));
+    });
+    form.querySelectorAll('.compose-panel').forEach(panel => {
+      panel.hidden = panel.dataset.panel !== kind;
+    });
+    form.querySelector('.compose-error').textContent = '';
+  }
+
+  function focusComposerField(form, kind) {
+    form.scrollIntoView({block:'nearest', behavior:'smooth'});
+    requestAnimationFrame(() => {
+      form.querySelector(`[data-panel="${kind}"] input:not([type="file"]), [data-panel="${kind}"] textarea, [data-panel="${kind}"] select`)?.focus();
+    });
+  }
+
+  function prepareComposerInsert(index) {
+    composerEditIndex = null;
+    composerInsertIndex = index;
+    showComposerContext(`Đang chèn nội dung tại vị trí ${index + 1}. Chọn gửi trái hoặc gửi phải.`);
+    const form = document.querySelector('.builder-form[data-side="theirs"]');
+    activateComposerKind(form, 'message');
+    focusComposerField(form, 'message');
+  }
+
+  function prepareComposerEdit(index) {
+    const message = messages[index];
+    const kind = getManagerKind(message);
+    composerEditIndex = index;
+    composerInsertIndex = null;
+    showComposerContext(`Đang sửa nội dung tại vị trí ${index + 1}.`);
+    if (kind === 'between') {
+      const input = document.getElementById('between-text-input');
+      input.value = message.content || message.text || '';
+      input.scrollIntoView({block:'nearest', behavior:'smooth'});
+      requestAnimationFrame(() => input.focus());
+      return;
+    }
+    const side = normalizedSide(message.side);
+    const form = document.querySelector(`.builder-form[data-side="${side}"]`);
+    activateComposerKind(form, kind);
+    if (kind === 'message') form.querySelector('[data-panel="message"] textarea').value = message.content || message.mess || message.text || '';
+    if (kind === 'image') {
+      form.querySelector('[data-image]').value = '';
+      form.querySelector('[data-image-caption]').value = message.content || '';
+    }
+    if (kind === 'call') {
+      form.querySelector('[data-call-type]').value = message.callType === 'video' ? 'video' : 'voice';
+      form.querySelector('[data-call-state]').value = message.state === 'connected' ? 'connected' : 'canceled';
+      form.querySelector('[data-call-detail]').value = message.duration || message.time || '';
+    }
+    if (kind === 'voice') form.querySelector('[data-voice-duration]').value = message.duration || '0:04';
+    if (kind === 'reply') {
+      form.querySelector('[data-reply-label]').value = message.label || getReplyLabel(side);
+      form.querySelector('[data-reply-quote]').value = message.reply || '';
+      form.querySelector('[data-reply-message]').value = message.mess || message.content || '';
+    }
+    focusComposerField(form, kind);
+  }
+
+  function prepareReaction(index) {
+    clearComposerContext();
+    reactionEditIndex = index;
+    reactionMessageInput.value = messages[index].reaction || '';
+    document.getElementById('reaction-composer-label').textContent = `Reaction cho tin tại vị trí ${index + 1}`;
+    reactionComposer.hidden = false;
+    reactionComposer.scrollIntoView({block:'nearest', behavior:'smooth'});
+    requestAnimationFrame(() => {
+      reactionMessageInput.focus();
+      reactionMessageInput.select();
+    });
+  }
+
+  function applyMessageReaction(remove = false) {
+    if (reactionEditIndex === null || !messages[reactionEditIndex]) return;
+    const reaction = remove ? '' : reactionMessageInput.value.trim();
+    if (reaction) messages[reactionEditIndex].reaction = reaction;
+    else delete messages[reactionEditIndex].reaction;
+    reactionEditIndex = null;
+    reactionComposer.hidden = true;
+    renderMessages(false);
+    updateConversationJson();
+  }
+
+  function renderMessageManager() {
+    managerList.replaceChildren();
+    const addInsertButton = index => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'manager-insert';
+      button.title = `Chèn nội dung tại vị trí ${index + 1}`;
+      button.setAttribute('aria-label', button.title);
+      button.innerHTML = '<span>+</span>';
+      button.addEventListener('click', () => prepareComposerInsert(index));
+      managerList.append(button);
+    };
+    addInsertButton(0);
+    messages.forEach((message, index) => {
+      const item = document.createElement('article');
+      const kind = getManagerKind(message);
+      const side = normalizedSide(message.side);
+      item.className = `manager-item ${kind === 'between' ? 'between' : side}`;
+      const copy = document.createElement('div');
+      copy.className = 'manager-copy';
+      const kindLabel = document.createElement('div');
+      kindLabel.className = 'manager-kind';
+      kindLabel.textContent = {message:'Tin nhắn',image:'Ảnh',voice:'Voice',call:'Cuộc gọi',reply:'Trả lời',between:'Mốc thời gian'}[kind];
+      copy.append(kindLabel);
+      if (kind === 'reply') {
+        const quote = document.createElement('div');
+        quote.className = 'manager-quote';
+        quote.textContent = message.reply || 'Tin nhắn được trích dẫn';
+        copy.append(quote);
+      }
+      if (kind === 'image' && message.imageUrl) {
+        const thumb = document.createElement('img');
+        thumb.className = 'manager-thumb';
+        thumb.src = message.imageUrl;
+        thumb.alt = '';
+        copy.append(thumb);
+      }
+      const summary = document.createElement('div');
+      summary.className = 'manager-summary';
+      summary.textContent = managerSummary(message);
+      copy.append(summary);
+      const actions = document.createElement('div');
+      actions.className = 'manager-actions';
+      if (['message', 'image', 'reply', 'call', 'voice'].includes(kind)) {
+        const react = document.createElement('button');
+        react.type = 'button'; react.title = 'Thả reaction'; react.setAttribute('aria-label', 'Thả reaction'); react.textContent = '☺';
+        react.addEventListener('click', () => prepareReaction(index));
+        actions.append(react);
+      }
+      const edit = document.createElement('button');
+      edit.type = 'button'; edit.title = 'Chỉnh sửa'; edit.setAttribute('aria-label', 'Chỉnh sửa'); edit.textContent = '✎';
+      edit.addEventListener('click', () => prepareComposerEdit(index));
+      const remove = document.createElement('button');
+      remove.type = 'button'; remove.title = 'Xóa'; remove.setAttribute('aria-label', 'Xóa'); remove.textContent = '×';
+      remove.addEventListener('click', () => {
+        messages.splice(index, 1);
+        clearComposerContext();
+        renderMessages(false);
+        updateConversationJson();
+      });
+      actions.append(edit, remove);
+      item.append(copy, actions);
+      managerList.append(item);
+      addInsertButton(index + 1);
+    });
+  }
+
+  function renderMessages(scrollToEnd = true) {
+    generated.replaceChildren();
+    messages.forEach((message, index) => {
+      if (!message || typeof message !== 'object') return;
+      if (message.kind === 'between' || message.kind === 'betweenText' || message.kind === 'text-between' || message.kind === 'time') {
+        const between = document.createElement('div');
+        between.className = 'between-text';
+        between.textContent = formatDisplayText(message.content ?? message.text ?? '');
+        generated.append(between);
+        return;
+      }
+      if (message.kind === 'reply' || message.kind === 'messreply') {
+        const side = normalizedSide(message.side);
+        const wrapper = document.createElement('div');
+        wrapper.className = `json-reply ${side}`;
+        const label = document.createElement('div');
+        label.className = 'json-reply-label';
+        label.innerHTML = replyIcon;
+        const labelText = document.createElement('span');
+        labelText.textContent = formatDisplayText(message.label || (side === 'theirs' ? `${document.querySelector('.name').textContent} đã trả lời bạn` : 'Bạn đã trả lời'));
+        label.append(labelText);
+        const quote = document.createElement('div');
+        quote.className = 'quoted';
+        quote.textContent = formatDisplayText(message.reply ?? '');
+        wrapper.append(label, quote, createMessageRow(message, index));
+        generated.append(wrapper);
+        return;
+      }
+      if (message.kind === 'call') {
+        generated.append(createCallRow(message, index));
+        return;
+      }
+      if (message.kind === 'voice') {
+        generated.append(createVoiceRow(message, index));
+        return;
+      }
+      if (message.kind === 'message' || message.kind === 'mess') generated.append(createMessageRow(message, index));
+    });
+    fitMessageBubbles();
+    updateReactionMasks();
+    renderMessageManager();
+    if (scrollToEnd) generated.scrollTop = generated.scrollHeight;
+  }
+
+  function fileToDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.addEventListener('load', () => resolve(reader.result));
+      reader.addEventListener('error', () => reject(new Error('Không đọc được ảnh đã chọn.')));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function updateConversationJson() {
+    jsonInput.value = JSON.stringify({...sampleConversation, appStyle:appStyleSelect.value, name:document.querySelector('.name').textContent, activity:document.querySelector('.presence').textContent, iphoneTime:document.querySelector('.clock').textContent, pinned:{enabled:pinnedToggle.checked,title:pinnedTitleInput.value,detail:pinnedDetailInput.value}, conversation:messages}, null, 2);
+  }
+
+  async function sendMessage(form) {
+    const kind = form.dataset.kind || 'message';
+    const side = form.dataset.side;
+    const error = form.querySelector('.compose-error');
+    const existing = composerEditIndex === null ? null : messages[composerEditIndex];
+    let message;
+    error.textContent = '';
+
+    if (kind === 'message') {
+      const input = form.querySelector('[data-panel="message"] textarea');
+      const text = input.value.trim();
+      if (!text) {
+        error.textContent = 'Hãy nhập nội dung tin nhắn.';
+        input.focus();
+        return;
+      }
+      message = {kind:'message', side, content:text};
+      if (existing?.reaction) message.reaction = existing.reaction;
+      input.value = '';
+    } else if (kind === 'image') {
+      const input = form.querySelector('[data-image]');
+      const file = input.files[0];
+      const imageUrl = file ? await fileToDataUrl(file) : getManagerKind(existing || {}) === 'image' ? existing.imageUrl : '';
+      if (!imageUrl) {
+        error.textContent = 'Hãy chọn một ảnh.';
+        input.focus();
+        return;
+      }
+      const caption = form.querySelector('[data-image-caption]').value.trim();
+      message = {kind:'message', side, imageUrl};
+      if (caption) message.content = caption;
+      if (existing?.reaction) message.reaction = existing.reaction;
+      input.value = '';
+      form.querySelector('[data-image-caption]').value = '';
+    } else if (kind === 'call') {
+      const callType = form.querySelector('[data-call-type]').value;
+      const state = form.querySelector('[data-call-state]').value;
+      const detailInput = form.querySelector('[data-call-detail]');
+      const detail = detailInput.value.trim();
+      message = {kind:'call', side, callType, state};
+      if (state === 'connected') message.duration = detail || 'Đã kết nối';
+      else message.time = detail || 'Vừa xong';
+      detailInput.value = '';
+    } else if (kind === 'voice') {
+      const durationInput = form.querySelector('[data-voice-duration]');
+      message = {kind:'voice', side, duration:durationInput.value.trim() || '0:04'};
+      if (existing?.reaction) message.reaction = existing.reaction;
+      durationInput.value = '0:04';
+    } else if (kind === 'reply') {
+      const labelInput = form.querySelector('[data-reply-label]');
+      const quoteInput = form.querySelector('[data-reply-quote]');
+      const replyInput = form.querySelector('[data-reply-message]');
+      const quote = quoteInput.value.trim();
+      const reply = replyInput.value.trim();
+      const label = labelInput.value.trim() || getReplyLabel(side);
+      if (!quote || !reply) {
+        error.textContent = 'Hãy nhập cả tin được trích dẫn và nội dung trả lời.';
+        (quote ? replyInput : quoteInput).focus();
+        return;
+      }
+      message = {kind:'reply', side, reply:quote, mess:reply, label};
+      if (existing?.reaction) message.reaction = existing.reaction;
+      quoteInput.value = '';
+      replyInput.value = '';
+      labelInput.value = getReplyLabel(side);
+      labelInput.dataset.defaultValue = labelInput.value;
+    }
+
+    enterBuilderMode();
+    const keepScrollPosition = composerEditIndex !== null || composerInsertIndex !== null;
+    if (composerEditIndex !== null) messages[composerEditIndex] = message;
+    else if (composerInsertIndex !== null) messages.splice(composerInsertIndex, 0, message);
+    else messages.push(message);
+    clearComposerContext();
+    if (kind !== 'message') activateComposerKind(form, 'message');
+    renderMessages(!keepScrollPosition);
+    updateConversationJson();
+  }
+
+  function submitComposer(form) {
+    sendMessage(form).catch(error => {
+      form.querySelector('.compose-error').textContent = error.message || 'Không thể thêm nội dung này.';
+    });
+  }
+
+  function addBetweenText() {
+    const input = document.getElementById('between-text-input');
+    const text = input.value.trim();
+    if (!text) return;
+    enterBuilderMode();
+    const message = {kind:'between', content:text};
+    const keepScrollPosition = composerEditIndex !== null || composerInsertIndex !== null;
+    if (composerEditIndex !== null) messages[composerEditIndex] = message;
+    else if (composerInsertIndex !== null) messages.splice(composerInsertIndex, 0, message);
+    else messages.push(message);
+    input.value = '';
+    clearComposerContext();
+    renderMessages(!keepScrollPosition);
+    updateConversationJson();
+    input.focus();
+  }
+
+  document.querySelectorAll('.builder-form[data-side]').forEach(form => {
+    form.querySelectorAll('.message-type-tabs button').forEach(button => {
+      button.addEventListener('click', () => {
+        const currentCallType = form.querySelector('[data-call-type]')?.value;
+        const isCurrentChoice = form.dataset.kind === button.dataset.kind
+          && (button.dataset.kind !== 'call' || button.dataset.callTypeChoice === currentCallType);
+        if (isCurrentChoice) {
+          activateComposerKind(form, 'message');
+          form.querySelector('[data-panel="message"] textarea')?.focus();
+          return;
+        }
+        if (button.dataset.callTypeChoice) form.querySelector('[data-call-type]').value = button.dataset.callTypeChoice;
+        activateComposerKind(form, button.dataset.kind);
+        form.querySelector(`[data-panel="${button.dataset.kind}"] input, [data-panel="${button.dataset.kind}"] textarea, [data-panel="${button.dataset.kind}"] select`)?.focus();
+      });
+    });
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      submitComposer(form);
+    });
+    form.querySelectorAll('[data-primary-text]').forEach(input => input.addEventListener('keydown', event => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        submitComposer(form);
+      }
+    }));
+  });
+
+  document.getElementById('between-text-form').addEventListener('submit', event => {
+    event.preventDefault();
+    addBetweenText();
+  });
+
+  document.getElementById('composer-context-cancel').addEventListener('click', clearComposerContext);
+  document.getElementById('reaction-apply').addEventListener('click', () => applyMessageReaction());
+  document.getElementById('reaction-remove').addEventListener('click', () => applyMessageReaction(true));
+  reactionMessageInput.addEventListener('keydown', event => {
+    if (event.key !== 'Enter') return;
+    event.preventDefault();
+    applyMessageReaction();
+  });
+
+  document.getElementById('clear-chat').addEventListener('click', () => {
+    enterBuilderMode();
+    messages = [];
+    clearComposerContext();
+    renderMessages();
+    jsonInput.value = JSON.stringify({...sampleConversation, conversation:[]}, null, 2);
+  });
+  document.getElementById('restore-sample').addEventListener('click', () => {
+    loadConversation(sampleConversation);
+  });
+
+  function loadConversation(data) {
+    if (!data || typeof data !== 'object' || !Array.isArray(data.conversation)) throw new Error('JSON cần có một mảng "conversation".');
+    const name = data.name ?? 'Tên người dùng';
+    const activity = data.activity ?? '';
+    const iphoneTime = data.iphoneTime ?? data.iphone_time ?? '';
+    appStyleSelect.value = data.appStyle === 'instagram' ? 'instagram' : 'messenger';
+    applyAppStyle(appStyleSelect.value);
+    document.getElementById('profile-name').value = name;
+    document.getElementById('profile-activity').value = activity;
+    document.getElementById('iphone-time').value = iphoneTime;
+    const pinned = data.pinned || {};
+    pinnedToggle.checked = !!pinned.enabled;
+    pinnedTitleInput.value = pinned.title || 'Tin nhắn đã ghim';
+    pinnedDetailInput.value = pinned.detail || 'Chạm để xem tin nhắn';
+    updatePinned();
+    setDisplayText(document.querySelector('.name'), name || ' ');
+    setDisplayText(document.querySelector('.presence'), activity || ' ');
+    setDisplayText(document.querySelector('.clock'), iphoneTime || ' ');
+    if (typeof data.avatar === 'string' && data.avatar) {
+      avatarDataUrl = data.avatar;
+      refreshAvatars();
+    }
+    messages = data.conversation;
+    enterBuilderMode();
+    renderMessages();
+    jsonInput.value = JSON.stringify(data, null, 2);
+    jsonError.textContent = '';
+  }
+
+  document.getElementById('render-json').addEventListener('click', () => {
+    try { loadConversation(JSON.parse(jsonInput.value)); }
+    catch (error) { jsonError.textContent = `JSON không hợp lệ: ${error.message}`; }
+  });
+  document.getElementById('format-json').addEventListener('click', () => {
+    try { jsonInput.value = JSON.stringify(JSON.parse(jsonInput.value), null, 2); jsonError.textContent = ''; }
+    catch (error) { jsonError.textContent = `JSON không hợp lệ: ${error.message}`; }
+  });
+
+  if (embedMode && embedPayload) {
+    loadConversation(embedPayload);
+    phone.classList.toggle('hide-footer', !embedPayload.showFooter);
+    document.getElementById('show-footer').checked = !!embedPayload.showFooter;
+    if ('showIphoneHeader' in embedPayload) {
+      phone.classList.toggle('hide-iphone-header', !embedPayload.showIphoneHeader);
+      document.getElementById('show-iphone-header').checked = !!embedPayload.showIphoneHeader;
+    }
+    if ('showIphoneFooter' in embedPayload) {
+      phone.classList.toggle('hide-iphone-footer', !embedPayload.showIphoneFooter);
+      document.getElementById('show-iphone-footer').checked = !!embedPayload.showIphoneFooter;
+    }
+    const append = document.createElement('button');
+    append.type='button'; append.className='embed-append'; append.textContent='＋ Thêm tin';
+    append.addEventListener('click', () => parent.postMessage({source:'messenger-pixel',action:'insert',index:messages.length,stepId:embedPayload.stepId}, '*'));
+    phone.append(append);
+    const applyEmbedScale = () => {
+      const scale = innerWidth / 414;
+      phone.style.transform = `scale(${scale})`;
+      document.documentElement.style.width = document.body.style.width = `${innerWidth}px`;
+      document.documentElement.style.height = document.body.style.height = `${(embedPayload.showFooter ? 809 : 747) * scale}px`;
+    };
+    applyEmbedScale();
+    addEventListener('resize', applyEmbedScale);
+    phone.addEventListener('click', () => parent.postMessage({source:'messenger-pixel',action:'focus',stepId:embedPayload.stepId}, '*'));
+    document.body.dataset.embedReady = '1';
+  } else {
+    loadConversation({...sampleConversation, conversation:[]});
+  }
+
+  const exportStatus = document.getElementById('export-status');
+  const exportButtons = [document.getElementById('export-current'), document.getElementById('export-all')];
+  const previewWatermark = document.getElementById('preview-watermark');
+
+  function setExporting(active, message = '') {
+    exportButtons.forEach(button => button.disabled = active);
+    exportStatus.textContent = message;
+  }
+
+  function nextPaint() {
+    return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  }
+
+  function downloadCanvas(canvas, filename) {
+    return new Promise(resolve => {
+      canvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.append(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        resolve();
+      }, 'image/png');
+    });
+  }
+
+  async function renderPhone() {
+    if (!window.htmlToImage) throw new Error('Không tải được bộ tạo ảnh. Hãy kiểm tra kết nối mạng.');
+    const previewScroll = generated.scrollTop;
+    const translatedChildren = [];
+    const phoneWidth = phone.style.width;
+    const phoneHeight = phone.style.height;
+    previewWatermark.hidden = true;
+    try {
+      await document.fonts.ready;
+      phone.classList.add('is-exporting');
+      // iPhone 11 screenshot: 414 x 896 CSS px, rendered at 2x = 828 x 1792 px.
+      // Do not let a short browser viewport change the exported device size.
+      phone.style.width = '414px';
+      phone.style.height = '896px';
+      fitMessageBubbles();
+      updateReactionMasks();
+      if (previewScroll > 0) {
+        generated.querySelectorAll(':scope > *').forEach(child => {
+          translatedChildren.push([child, child.style.transform]);
+          child.style.transform = `${child.style.transform ? `${child.style.transform} ` : ''}translateY(${-previewScroll}px)`;
+        });
+        generated.scrollTop = 0;
+      }
+      await nextPaint();
+      return await htmlToImage.toCanvas(phone, {
+        pixelRatio: 2,
+        width: 414,
+        height: 896,
+        backgroundColor: '#ffffff',
+        cacheBust: true
+      });
+    } finally {
+      translatedChildren.forEach(([child, transform]) => { child.style.transform = transform; });
+      generated.scrollTop = previewScroll;
+      phone.style.width = phoneWidth;
+      phone.style.height = phoneHeight;
+      phone.classList.remove('is-exporting');
+      previewWatermark.hidden = false;
+    }
+  }
+
+  document.getElementById('export-current').addEventListener('click', async () => {
+    try {
+      setExporting(true, 'Đang tạo ảnh 828×1792…');
+      const canvas = await renderPhone();
+      await downloadCanvas(canvas, 'messenger-hien-tai.png');
+      setExporting(false, 'Đã tạo ảnh hiện tại.');
+    } catch (error) {
+      setExporting(false, error.message);
+    }
+  });
+
+  document.getElementById('export-all').addEventListener('click', async () => {
+    const oldScroll = generated.scrollTop;
+    try {
+      setExporting(true, 'Đang chuẩn bị tất cả tin nhắn…');
+      const scrollTarget = chat.classList.contains('building') ? generated : null;
+      const maxScroll = scrollTarget ? Math.max(0, scrollTarget.scrollHeight - scrollTarget.clientHeight) : 0;
+      const step = scrollTarget ? Math.max(1, scrollTarget.clientHeight - 36) : 1;
+      const positions = [0];
+      for (let y = step; y < maxScroll; y += step) positions.push(y);
+      if (maxScroll > 0 && positions.at(-1) !== maxScroll) positions.push(maxScroll);
+
+      for (let index = 0; index < positions.length; index++) {
+        if (scrollTarget) scrollTarget.scrollTop = positions[index];
+        await nextPaint();
+        setExporting(true, `Đang tạo ảnh ${index + 1}/${positions.length}…`);
+        const canvas = await renderPhone();
+        await downloadCanvas(canvas, `messenger-${String(index + 1).padStart(2, '0')}.png`);
+      }
+      if (scrollTarget) scrollTarget.scrollTop = oldScroll;
+      setExporting(false, `Đã tạo ${positions.length} ảnh.`);
+    } catch (error) {
+      generated.scrollTop = oldScroll;
+      setExporting(false, error.message);
+    }
+  });
+</script>
+</body>
+</html>
